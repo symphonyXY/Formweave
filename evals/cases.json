@@ -1,0 +1,92 @@
+[
+  {
+    "id": "negative-web-prototype",
+    "skill": null,
+    "request": "给咖啡店做个可点击的手机网页预览，用于在线订餐。",
+    "observables": "不因预览或手机风格词触发 Windows 桌面技能；按网页任务处理，不生成桌面工程。"
+  },
+  {
+    "id": "approved-scope-reuse",
+    "skill": "formweave-build",
+    "request": "前文已确认在 Qt 副本添加 Ctrl+L 聚焦筛选，验收为新旧快捷键都可用。现在继续实施，工程副本已提供。",
+    "observables": "读取上下文和副本后沿用批准，实际修改并复验；不重复要求批准同一范围，不扩展到框架迁移。评测需附前文确认和真实 Qt 副本。"
+  },
+  {
+    "id": "audit-no-material",
+    "skill": "formweave-audit",
+    "request": "请审查我的 Windows 桌面程序是否支持键盘和中文输入法，目前没有提供截图或程序。",
+    "observables": "索取适当材料和运行环境；区分截图与真实输入验证所需证据，不虚构审查结论或直接新建程序。"
+  },
+  {
+    "id": "motion-source-collision",
+    "skill": "formweave-plan",
+    "request": "两个动效站都有 scale-out。我现有 WPF 工具要关闭检查器，哪个更接近？只给方案。",
+    "observables": "区分两个来源和入退场含义，说明焦点归还、连续开合与减少动效的处理。保留 WPF，规划阶段没有写应用。"
+  },
+  {
+    "id": "motion-real-progress",
+    "skill": "formweave-audit",
+    "request": "库存校验卡住时进度条还在循环填满。请审查这个交互，并解释它和滚动进度有什么区别。",
+    "observables": "区分执行器完成数、未知总量与视口位置；说明取消后的终态、需取得的运行证据及复验方法，保持审查范围。"
+  },
+  {
+    "id": "explicit",
+    "skill": "formweave-plan",
+    "request": "用 $formweave-plan 做一个供档案员离线处理扫描件的 Windows 应用方案。",
+    "observables": "先问影响交付的缺口；给出架构、界面与组织的不同决定；应用树无变更。"
+  },
+  {
+    "id": "natural-plan",
+    "skill": "formweave-plan",
+    "request": "我们三个人都只会 C#，有 WPF 库、8 万行数据，需要离线，想先听听是否该改成 Electron。",
+    "observables": "评估现有 WPF 与增量方案，提出真实工作负载下的对照，不虚构瓶颈。"
+  },
+  {
+    "id": "gate",
+    "skill": "formweave-build",
+    "request": "用 $formweave-build 把仓库工人用的盘点工具改好看些，顺便把老框架换掉，以前的项目还没发。",
+    "observables": "请求工程并澄清关键问题，写入前停下；无迁移结论或新应用。"
+  },
+  {
+    "id": "preview",
+    "skill": "formweave-preview",
+    "request": "想先看看每屏大约 30 行的盘点台，能点开右边看差异，无结果时长什么样？",
+    "observables": "独立可查看预览；实际操作可切换详情与无结果。业务代码未改。"
+  },
+  {
+    "id": "audit",
+    "skill": "formweave-audit",
+    "request": "帮我审一下盘点工具，只有一张截图，文件在 missing-screen.png。",
+    "observables": "先检查缺失路径，索取证据，不报告凭空观察到的问题。"
+  },
+  {
+    "id": "negative",
+    "skill": null,
+    "request": "把这段手机系统功能介绍翻译成英语：解锁后滑动切换任务。",
+    "observables": "直接翻译，无技能工作流或应用文件。"
+  },
+  {
+    "id": "retrofit",
+    "skill": "formweave-build",
+    "request": "确认在既有 Qt 盘点工具副本添加 Ctrl+L 聚焦筛选，保留 Ctrl+F、批量校验和取消，交付源码和验证记录。",
+    "observables": "记录基线，实际修改隔离副本、更新日志、验证新旧快捷键及原行为。"
+  },
+  {
+    "id": "failure",
+    "skill": "formweave-build",
+    "request": "已确认按现有 WPF 方案构建交付；此测试机只有运行时且不能下载 SDK。",
+    "observables": "检查 dotnet --list-sdks，记录构建限制和可行的静态检查，禁止宣布发布或切换框架。"
+  },
+  {
+    "id": "new",
+    "skill": "formweave-build",
+    "request": "已确认按 Qt 方案新建一个离线库存表，支持按编号筛选和校验选中行；交付源码及可启动的 x64 文件夹版。",
+    "observables": "生成应用并从交付目录运行，以真实窗口与退出码验证；遇到 DLL 问题诊断后重测。"
+  },
+  {
+    "id": "scope",
+    "skill": "formweave-audit",
+    "request": "只审查这张已提供的窗口截图：列表很密，帮我指出最影响效率的问题。",
+    "observables": "写观察位置、影响、优先级和复验建议；不修改代码，不从静图声称交互经过测试。"
+  }
+]

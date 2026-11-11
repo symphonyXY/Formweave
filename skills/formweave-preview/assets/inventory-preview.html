@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>织形 · 差异复核</title>
+<style>
+:root {
+  --page:#f4f3f8; --surface:#fff; --ink:#292638; --secondary:#625e70; --line:#e2deea;
+  --accent:#644b88; --wash:#eee8f7; --hero:#383152; --green:#29654f; --amber:#805222;
+  font:14px/1.5 "Segoe UI","Microsoft YaHei UI",sans-serif; color:var(--ink); background:var(--page);
+}
+*{box-sizing:border-box} body{margin:0} button,input{font:inherit} button{cursor:pointer} [hidden]{display:none!important}
+.shell{width:min(1280px,100%);margin:auto;padding:0 clamp(16px,3.4vw,52px) 24px}
+.top{display:flex;align-items:center;justify-content:space-between;height:58px}
+.brand{display:inline-flex;align-items:center;gap:10px;font:650 19px/1 "Segoe UI",sans-serif;letter-spacing:-.6px}
+.logo{width:25px;height:25px;background:var(--hero);color:white;border-radius:8px;display:grid;place-items:center}
+.subtle{color:var(--secondary);font-size:12px}.local{display:flex;align-items:center;gap:7px}.dot{width:7px;height:7px;border-radius:50%;background:#51816e}
+.hero{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;justify-content:space-between;padding:20px 28px;background:linear-gradient(108deg,#332f49,#454064 65%,#50466d);color:white;border-radius:16px}
+.eyebrow{font:650 10px/1.5 "Segoe UI",sans-serif;letter-spacing:2px;color:#dad2f0}
+h1{font-size:30px;line-height:1.2;margin:7px 0;font-weight:680;letter-spacing:-1px}
+.hero p{color:#e4e0ef;margin:0;font-size:13px}.art{width:min(31%,300px);height:104px}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) 284px;gap:16px;margin-top:16px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 2px 6px #33254b08;overflow:hidden}
+.panel-head,.tools,.foot{display:flex;align-items:center;gap:10px}.panel-head{padding:17px 18px 9px}
+h2,h3,p{margin:0} h2{font-size:18px;letter-spacing:-.5px}.count,.pill{border-radius:6px;font-size:12px;display:inline-block;padding:2px 8px;font-variant-numeric:tabular-nums}
+.count{color:var(--accent);background:var(--wash);font-weight:650}.tools{padding:4px 18px 12px;justify-content:space-between;flex-wrap:wrap}
+.search{display:flex;align-items:center;gap:8px;border:1px solid #d8d2e1;border-radius:8px;padding:5px 9px;background:#faf9fc;color:var(--secondary);flex:1;max-width:310px}
+.search:focus-within{outline:2px solid #846baa;outline-offset:1px}.search input{width:100%;min-width:70px;background:transparent;border:0;color:var(--ink);outline:0}
+button{border-radius:6px;border:1px solid var(--line);background:white;color:var(--ink);transition:background .12s,transform .12s}
+button:hover{background:var(--wash)}button:active{transform:translateY(1px)}button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+#clear{border:0;background:transparent;white-space:nowrap;color:var(--accent);font-size:12px}
+.filters{display:flex;gap:2px;border-radius:8px;background:#f2eff6;padding:3px}.filters button{background:transparent;border:0;padding:3px 9px;color:var(--secondary);font-size:12px}
+.filters button[aria-pressed=true]{background:white;color:#51376f;box-shadow:0 1px 3px #37264d24;font-weight:650}
+.scroll{max-height:max(220px,calc(100dvh - 370px));overflow:auto;scrollbar-color:#cdc6da transparent}
+table{border-collapse:separate;border-spacing:0;width:100%;font-variant-numeric:tabular-nums}
+th{position:sticky;top:0;background:#f6f5f9;color:var(--secondary);font-size:12px;z-index:1}
+th,td{height:29px;padding:2px 12px;text-align:right;white-space:nowrap}
+th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}th:first-child,td:first-child{padding-left:18px}
+td{border-bottom:1px solid #f0edf4}tbody tr{cursor:pointer;transition:background .12s}tbody tr:hover{background:#f6f3f9}
+tbody tr[aria-selected=true]{background:var(--wash)}tr[aria-selected=true] td:first-child{box-shadow:inset 3px 0 var(--accent)}
+.select{padding:0;border:0;background:transparent;color:#574175;font:600 13px/1.4 "Segoe UI",sans-serif}
+.qty{font-variant-numeric:tabular-nums}.pos{color:var(--green)}.neg{color:var(--amber)}
+.foot{justify-content:space-between;padding:8px 18px;color:var(--secondary);font-size:12px;border-top:1px solid var(--line)}
+.foot button{padding:3px 8px;font-size:12px}#empty{text-align:center;padding:55px 12px}#empty p{color:var(--secondary);margin:6px}
+aside{padding:20px}.overline{font:650 10px "Segoe UI",sans-serif;color:#786a8c;letter-spacing:2px}.aside-title{margin:4px 0 18px}
+.record{border-top:1px solid var(--line);padding-top:17px}.record h3{font-size:23px;margin:4px 0 8px}
+.pill.neg{background:#fbefdc}.pill.pos{background:#e1f0e7}.pill.even{background:#efedf3;color:#585461}
+.scores{display:grid;grid-template-columns:1fr 1fr;margin:20px 0 16px;gap:8px}
+.score{padding:10px 12px;background:#f6f4f9;border-radius:8px}.score b{display:block;font:600 23px/1.4 "Segoe UI",sans-serif}
+.meta{border-top:1px solid var(--line);padding-top:12px;display:flex;justify-content:space-between;color:var(--secondary)}
+.guide{margin-top:20px;font-size:12px;color:var(--secondary)}
+body.compact .hero{display:none}body.compact td,body.compact th{height:21px;font-size:12px}body.compact .scroll{max-height:max(220px,calc(100dvh - 207px))}
+@media(max-width:780px){.workspace{grid-template-columns:1fr}.hero{padding:16px 18px}.art{height:80px}.scroll{max-height:45dvh}.shell{padding:0 12px 16px}.scores{max-width:340px}.guide{margin-top:10px}}
+@media(max-width:480px){.art{display:none}.tools{align-items:stretch}.search{max-width:none;flex-basis:100%}th,td{padding:2px 6px}.hero h1{font-size:26px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+@media(forced-colors:active){.card,.hero,.filters button[aria-pressed=true]{border:1px solid CanvasText}tr[aria-selected=true]{outline:2px solid Highlight;outline-offset:-2px}.art{visibility:hidden}}
+</style>
+</head>
+<body><main class="shell">
+<header class="top"><div class="brand"><span class="logo" aria-hidden="true"><svg width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><path d="m2 7 8-4 8 4-8 4zM2 10l8 4 8-4M2 13l8 4 8-4"/></svg></span>Formweave</div><span class="subtle local"><i class="dot"></i>本地预览 · 模拟数据</span></header>
+<section class="hero"><div><div class="eyebrow">OPERATIONS　/　INVENTORY</div><h1>差异复核</h1><p>逐项核对账面与实盘数量，定位需要复查的物料。</p></div><svg class="art" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 136" fill="none">
+<defs><linearGradient id="sheet" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#f5edff"/><stop offset="1" stop-color="#bab1f5"/></linearGradient></defs>
+<g stroke="#a49bd7" opacity=".32" stroke-width=".8"><path d="m6 93 125-65 182 72M50 125l143-80 125 52M74 132l139-74M1 63l172 72M64 25l219 91"/><circle cx="42" cy="79" r="2"/><circle cx="276" cy="86" r="2"/></g>
+<g stroke-linejoin="round"><path d="m72 88 89-48 96 37-91 52z" fill="#534b88" stroke="#9c92c8"/><path d="m72 76 89-48 96 37-91 52z" fill="#8174b7" stroke="#b1a8de"/><path d="m72 61 89-48 96 37-91 52z" fill="url(#sheet)" stroke="#ece7ff"/>
+<path d="m90 61 40-21 7 3-40 22z" fill="#625291"/><path d="m105 67 29-15m-22 18 18-9" stroke="#8e80b7" stroke-width="2.5"/>
+<path d="m162 29 19 8m-24-5 18 8m-22-6 17 7" stroke="#8675ab" stroke-width="1.8"/>
+<path d="m180 66 30-16 22 8-30 17z" fill="#9182be"/><path d="m188 66 20-10m-15 12 19-10" stroke="#f0e9fa" stroke-width="1.5"/>
+</g></svg></section>
+<div class="workspace"><section class="card"><div class="panel-head"><h2>盘点明细</h2><span class="count" role="status"></span></div>
+<div class="tools"><div class="search"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7.5" cy="7.5" r="5"/><path d="m11.1 11.1 4 4"/></svg><input id="query" aria-label="搜索货号或品名" placeholder="搜索货号或品名"><span><button type="button" id="clear" aria-label="清除筛选">清除</button></span></div>
+<div class="filters" aria-label="盘点状态"><button data-filter="all" aria-pressed="true">全部</button><button data-filter="diff" aria-pressed="false">有差异</button><button data-filter="even" aria-pressed="false">相符</button></div></div>
+<div class="scroll"><table><thead><tr><th>物料编号</th><th>品名</th><th>账面</th><th>实盘</th><th>差异</th></tr></thead><tbody></tbody></table>
+<div id="empty" hidden><strong>没有匹配的物料</strong><p>试试其他关键词或盘点状态。</p></div></div>
+<div class="foot"><span>点击记录查看差异</span><button id="density" aria-pressed="false">紧凑视图</button></div></section>
+<aside class="card"><div class="overline">RECORD INSPECTOR</div><h2 class="aside-title">差异详情</h2><div id="detail" class="record" aria-live="polite"></div><p class="guide">用 Tab 定位货号，按 Enter 查看详情。</p></aside></div></main>
+<script>
+const $ = selector => document.querySelector(selector);
+const names = ['瓦楞箱','缠绕膜','标签纸','手持终端','扫描枪','周转筐'];
+const rows = Array.from({length:72}, (_,i) => ({
+  id:'P-'+(2001+i), name:names[i%6], base:40+i, delta:[-3,2,0,-1][i%4],
+  bin:'A-'+String(1+Math.floor(i/8)).padStart(2,'0')
+}));
+let selected = rows[0], filter = 'all', transition;
+function show(row) {
+  const changed = selected !== row;
+  selected = row;
+  for (const tr of document.querySelectorAll('tbody tr')) tr.setAttribute('aria-selected', String(tr.dataset.id === row?.id));
+  const detail = $('#detail');
+  if (transition) transition.cancel();
+  if (!row) { detail.textContent='暂无可显示的差异详情。'; return; }
+  const state = row.delta>0 ? 'pos' : row.delta<0 ? 'neg' : 'even';
+  const outcome = row.delta===0 ? '账实相符' : (row.delta>0 ? '盘盈 ' : '盘亏 ')+Math.abs(row.delta)+' 件';
+  detail.innerHTML = `<div class="subtle">${row.id}</div><h3>${row.name}</h3><span class="pill ${state}">${outcome}</span><div class="scores"><div class="score"><span class="subtle">账面数量</span><b>${row.base}</b></div><div class="score"><span class="subtle">实盘数量</span><b>${row.base+row.delta}</b></div></div><div class="meta"><span>库位</span><strong>${row.bin}</strong></div>`;
+  if (changed && !matchMedia('(prefers-reduced-motion:reduce)').matches)
+    transition = detail.animate([{opacity:.72,transform:'translateY(2px)'},{opacity:1,transform:'none'}], {duration:150,easing:'ease-out'});
+}
+function draw() {
+  const term=$('#query').value.trim().toLowerCase();
+  const hits=rows.filter(r=>(r.id+r.name).toLowerCase().includes(term) && (filter==='all' || (filter==='diff' ? r.delta!==0 : r.delta===0)));
+  const tbody=$('tbody');
+  tbody.replaceChildren();
+  for (const row of hits) {
+    const tr=tbody.insertRow(); tr.dataset.id=row.id;
+    const button=document.createElement('button'); button.className='select'; button.textContent=row.id; button.setAttribute('aria-label','查看 '+row.id+' 差异'); tr.insertCell().append(button);
+    for (const value of [row.name,row.base,row.base+row.delta,row.delta>0?'+'+row.delta:row.delta]) tr.insertCell().textContent=value;
+    tr.lastElementChild.className=row.delta<0?'neg':row.delta>0?'pos':'';
+    tr.onclick=()=>show(row);
+  }
+  $('.count').textContent=hits.length+' 项'; $('#empty').hidden=hits.length>0;
+  show(hits.includes(selected)?selected:hits[0]);
+}
+$('#query').oninput=draw;
+$('#clear').onclick=()=>{$('#query').value='';draw();$('#query').focus();};
+for(const button of document.querySelectorAll('[data-filter]')) button.onclick=()=>{
+  filter=button.dataset.filter;
+  for(const option of document.querySelectorAll('[data-filter]')) option.setAttribute('aria-pressed',String(option===button));
+  draw();
+};
+$('#density').onclick=()=>{
+  const compact=document.body.classList.toggle('compact');
+  $('#density').setAttribute('aria-pressed',String(compact));
+  $('#density').textContent=compact?'标准视图':'紧凑视图';
+};
+draw();
+</script></body></html>

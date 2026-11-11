@@ -1,0 +1,60 @@
+<Window x:Class="Formweave.MainWindow"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  Title="织形 · 库存明细" Width="760" Height="540" MinWidth="390" MinHeight="340"
+  Background="{DynamicResource PageBrush}" FontFamily="Microsoft YaHei UI, Segoe UI"
+  PreviewKeyDown="OnKey">
+  <Window.Resources>
+    <SolidColorBrush x:Key="PageBrush" Color="#EFF3F6"/>
+    <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="InkBrush" Color="#20394B"/>
+    <SolidColorBrush x:Key="MutedBrush" Color="#526B7C"/>
+    <SolidColorBrush x:Key="LineBrush" Color="#D5E0E7"/>
+    <SolidColorBrush x:Key="WashBrush" Color="#E5EFF5"/>
+    <Style TargetType="DataGridColumnHeader">
+      <Setter Property="Background" Value="{DynamicResource WashBrush}"/>
+      <Setter Property="Foreground" Value="{DynamicResource InkBrush}"/>
+      <Setter Property="Padding" Value="12,6"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    </Style>
+    <Style x:Key="CellText" TargetType="TextBlock">
+      <Setter Property="Margin" Value="12,0"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+  </Window.Resources>
+  <Grid Margin="22">
+    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+    <DockPanel Margin="0,0,0,12">
+      <TextBlock DockPanel.Dock="Right" Text=".NET   /   WPF" HorizontalAlignment="Right" Foreground="{DynamicResource MutedBrush}"/>
+      <TextBlock FontWeight="SemiBold" Foreground="{DynamicResource InkBrush}" Text="Formweave    /    织形"/>
+    </DockPanel>
+    <StackPanel Grid.Row="1" Margin="0,0,0,14">
+      <TextBlock FontSize="28" FontWeight="SemiBold" Foreground="{DynamicResource InkBrush}" Text="库存明细"/>
+      <TextBlock Foreground="{DynamicResource MutedBrush}" Text="按物料编号查找库存，使用方向键浏览匹配记录。"/>
+    </StackPanel>
+    <Border Grid.Row="2" CornerRadius="10" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1" Padding="12">
+      <Grid>
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition/></Grid.RowDefinitions>
+        <DockPanel Margin="0,0,0,10">
+          <Label Target="{Binding ElementName=Query}" Content="编号(_F)" Foreground="{DynamicResource InkBrush}" VerticalAlignment="Center" Padding="0,0,12,0"/>
+          <TextBlock x:Name="Status" DockPanel.Dock="Right" Margin="12,0,2,0" VerticalAlignment="Center" Foreground="{DynamicResource MutedBrush}"/>
+          <TextBox x:Name="Query" Padding="8,4" VerticalContentAlignment="Center" BorderBrush="{DynamicResource LineBrush}" AutomationProperties.Name="按编号筛选" TextChanged="OnSearch"/>
+        </DockPanel>
+        <DataGrid Grid.Row="1" x:Name="Rows" IsReadOnly="True" AutoGenerateColumns="False" EnableRowVirtualization="True" HeadersVisibility="Column"
+          GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{DynamicResource LineBrush}" BorderThickness="0" Background="{DynamicResource SurfaceBrush}"
+          SelectionMode="Single" RowHeight="30" SelectionChanged="OnSelection" AutomationProperties.Name="物料明细">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="物料编号" Binding="{Binding Code}" ElementStyle="{StaticResource CellText}" Width="2*"/>
+            <DataGridTextColumn Header="库区" Binding="{Binding Zone}" ElementStyle="{StaticResource CellText}" Width="*"/>
+            <DataGridTextColumn Header="库存数量" Binding="{Binding Quantity}" ElementStyle="{StaticResource CellText}" Width="*"/>
+          </DataGrid.Columns>
+        </DataGrid>
+        <TextBlock Grid.Row="1" x:Name="EmptyHint" Text="没有匹配物料，按 Esc 清除筛选。" Foreground="{DynamicResource MutedBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
+      </Grid>
+    </Border>
+    <Border Grid.Row="3" Margin="0,10,0,0" Background="{DynamicResource WashBrush}" CornerRadius="7" Padding="12,7">
+      <TextBlock x:Name="SelectionInfo" Text="选择一条记录查看库存。" Foreground="{DynamicResource InkBrush}" TextWrapping="Wrap"/>
+    </Border>
+  </Grid>
+</Window>

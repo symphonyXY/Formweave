@@ -1,0 +1,4 @@
+interface:
+  display_name: "织形 · 规划"
+  short_description: "为 Windows 桌面应用确认需求、选择技术路线并约定交付标准。"
+  default_prompt: "使用 $formweave-plan，为我的 Windows 桌面项目整理可确认的方案。"

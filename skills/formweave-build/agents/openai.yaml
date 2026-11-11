@@ -1,0 +1,4 @@
+interface:
+  display_name: "织形 · 开发"
+  short_description: "按已确认的范围新建或改造 Windows 应用，并验证性能与交付包。"
+  default_prompt: "使用 $formweave-build，先检查既有项目，再按已确认的范围实施并验证。"
