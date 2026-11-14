@@ -1,5 +1,29 @@
 [
   {
+    "id": "plan-sufficient-constraints",
+    "skill": "formweave-plan",
+    "request": "我们已有运行正常的 WPF 库存工具，Windows 11 x64，离线使用，每屏约 40 行。只想把筛选和详情入口理顺，保留当前框架、数据和文件夹交付方式。先给一个可确认的方案。",
+    "observables": "沿用已知约束，围绕筛选、详情和键盘路径提出可验收方案；不为凑数量比较其他框架，不要求重填全部确认字段，不修改应用。仅询问确会改变方案的缺口。"
+  },
+  {
+    "id": "motion-hub-source-routing",
+    "skill": "formweave-plan",
+    "request": "借鉴 https://holynova.github.io/web-motion-showcase/?lang=zh&theme=slate&mode=light 的标签高亮和配色，为已有 WPF 库存表给方案；每屏约 40 行。",
+    "observables": "识别为 Motion Hub 而非 LuckyMaomi，按需查来源＋ID；把语义色、固定命中区、即时筛选和可中断指示器用于密集表格，保留 WPF。给出正常、连续输入及减少动效验收，无应用写入。"
+  },
+  {
+    "id": "motion-preview-replay",
+    "skill": "formweave-preview",
+    "request": "参考 Motion.Lab 的调参面板，为库存校验做独立可点击预览，能调时长、重播并切换减少动效；校验用模拟数据。",
+    "observables": "独立预览有可用入口；调参只影响指定表面，重播不重复启动校验或清空用户选择。实际尝试连续操作与减少动效；模拟计数明确标注，未运行的交互如实记录。"
+  },
+  {
+    "id": "motion-audit-screenshot-limit",
+    "skill": "formweave-audit",
+    "request": "我只有一张采用 Motion Hub 风格的桌面程序截图，请判断标签的弹簧动效和减少动效是否实现正确。",
+    "observables": "先确认截图可访问；只评价可见的结构、对比、焦点或状态线索，不从静图推断动效正确。提出 A→B→C、缩放、键盘和减少动效的运行复验；不直接修应用。"
+  },
+  {
     "id": "negative-web-prototype",
     "skill": null,
     "request": "给咖啡店做个可点击的手机网页预览，用于在线订餐。",

@@ -28,7 +28,6 @@ def main(screenshot):
     win = Workbench(80000)
     win.show()
     win.activateWindow()
-    app.setActiveWindow(win)
     wait_for(app, win.isActiveWindow)
     win.table.setFocus()
     app.processEvents()

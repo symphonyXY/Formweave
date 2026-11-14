@@ -178,7 +178,11 @@ If you do not know which skill to use, describe the Windows desktop task and let
 
 A common sequence is Plan → Preview → Build → Audit. If the scope is already clear, start with the relevant skill.
 
-All four skills include a [desktop motion decision guide](skills/formweave-build/references/motion.md) and a [two-source motion index](skills/formweave-build/references/motion-index.md) with 217 source entries. Consult the index when a specific effect is needed, then verify repeated input, interruption, and reduced motion. Static screenshots cannot establish these behaviors.
+All four skills include a [desktop motion decision guide](skills/formweave-build/references/motion.md) and a [source index](skills/formweave-build/references/motion-index.md). The unreleased working tree adds [60 Motion Hub entries](skills/formweave-build/references/motion-hub-index.md) to the existing 57 LuckyMaomi and 160 Motion.Lab entries, for 277 source entries in total. Indexes load on demand; catalog coverage does not imply native implementation or acceptance testing.
+
+Each entry point states its environment requirements in the body, followed by execution, conditional references, and delivery criteria. The motion source navigator points to three independently loaded catalogs; every installed package remains self-contained. Scope checks reuse available information and ask only about gaps that affect the current decision.
+
+The [interface and motion adaptation guide](skills/formweave-build/references/interface-motion.md) connects search and filters, inspectors, local parameter controls, themes, and tab indicators to desktop tasks. Planning records states and acceptance criteria, previews compare normal and reduced motion, implementation binds real business data, and audits verify repeated input and focus. Existing frameworks and approved scope carry forward. For example: “Use Motion.Lab's inspector and Motion Hub's segmented tabs in a standalone preview for our existing WPF inventory tool, keeping the table stable.”
 
 ## Updating
 
@@ -195,9 +199,11 @@ Installing or updating identical content reports `一致` (matching). Each skill
 <details>
 <summary>Handle installation conflicts and interruptions</summary>
 
-The installer stops if a destination lacks a receipt, has local changes, contains links, or already has a lock. Back up and compare the differences before deciding how to retain custom content.
+The installer stops if a destination lacks a receipt, has an invalid receipt, has local changes, contains links, or already has a lock. Back up and compare the state; do not regenerate a receipt to overwrite differences.
 
-After an operating system interruption, first confirm that the process recorded in the lock has ended. Compare `previous`, `new`, and the existing target inside the adjacent `.formweave-stage-*` directory. If the target is missing, a complete `previous` directory can be restored to its original name. Only after backup and verification should you remove the specific leftover lock and run `verify` again. Do not delete skill directories in bulk.
+After an interruption, first confirm that the process recorded in the lock has ended. Back up and compare `previous`, `new`, and the existing target inside the adjacent `.formweave-stage-*` directory. Restore a complete `previous` directory only when the target is absent. If automatic restoration fails, the installer retains the backup and reports its path. Inspect the state before handling the specific leftover lock; do not delete skill directories in bulk.
+
+A restored older package may differ from the current source; a `verify` mismatch does not by itself mean restoration failed. To continue upgrading, run `update` with the original destination, then `verify`. To retain the older package, verify it against the matching older source.
 
 </details>
 

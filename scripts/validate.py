@@ -8,10 +8,13 @@ import sys
 
 sys.dont_write_bytecode = True
 import yaml
-from manage import NAMES, ROOT, inventory
+from manage import NAMES, ROOT, inventory, safe_path
 
 LINK = re.compile(r"!?\[[^\]\n]*\]\(([^)\s]+)\)")
 UNFINISHED = re.compile(r"\[(?:TODO|INSERT HERE|REPLACE ME)\b|\bTBD\b", re.I)
+TEXT_SUFFIXES = {".md", ".py", ".yaml", ".yml", ".json", ".jsonl", ".html",
+                 ".js", ".cjs", ".css", ".cs", ".csproj", ".xaml", ".txt"}
+TEXT_NAMES = {"VERSION", "LICENSE", ".editorconfig", ".gitattributes", ".gitignore"}
 
 
 class UniqueKeyLoader(yaml.SafeLoader):
@@ -59,6 +62,7 @@ def check_text(path):
 
 def check_links(doc, boundary):
     boundary = boundary.resolve()
+    targets = []
     for link in LINK.findall(doc.read_text(encoding="utf-8")):
         path = link.split("#")[0]
         if not path or path.startswith(("https://", "http://", "mailto:")):
@@ -66,11 +70,17 @@ def check_links(doc, boundary):
         target = (doc.parent / path).resolve()
         if Path(path).is_absolute() or not target.is_relative_to(boundary) or not target.is_file():
             raise ValueError(f"{doc}: 引用越界或不存在 {link}")
+        targets.append(target)
+    return targets
 
 
 def validate_skill(folder):
-    folder = folder.resolve()
+    folder = safe_path(folder)
     entries = inventory(folder, installed=True)
+    for name in entries:
+        path = folder / name
+        if not name.endswith("/") and (path.suffix in TEXT_SUFFIXES or path.name in TEXT_NAMES):
+            check_text(path)
     for name in ("SKILL.md", "agents/openai.yaml", "LICENSE"):
         if name not in entries:
             raise ValueError(f"{folder}: 缺少 {name}")
@@ -107,10 +117,21 @@ def validate_skill(folder):
         if not isinstance(policy, dict) or ("allow_implicit_invocation" in policy
                 and not isinstance(policy["allow_implicit_invocation"], bool)):
             raise ValueError(f"{folder}: 调用策略无效")
+    graph = {}
     for doc in folder.rglob("*.md"):
-        check_links(doc, folder)
+        graph[doc] = check_links(doc, folder)
         if UNFINISHED.search(doc.read_text(encoding="utf-8")):
             raise ValueError(f"{doc}: 残留脚手架标记")
+    pending, visited = [folder / "SKILL.md"], set()
+    while pending:
+        doc = pending.pop()
+        if doc not in visited:
+            visited.add(doc)
+            pending.extend(target for target in graph.get(doc, []) if target.suffix == ".md")
+    missing = set((folder / "references").rglob("*.md")) - visited
+    if missing:
+        raise ValueError(f"{folder}: 参考资料无法从入口发现："
+                         + ", ".join(sorted(path.relative_to(folder).as_posix() for path in missing)))
     return meta
 
 
@@ -145,13 +166,11 @@ def validate_repo():
                 raise ValueError(f"独立包内共享参考发生漂移：{doc.name}")
     for doc in [*ROOT.glob("*.md"), *(ROOT / "docs").rglob("*.md"), *(ROOT / "evals").glob("*.md")]:
         check_links(doc, ROOT)
-    text_suffixes = {".md", ".py", ".yaml", ".yml", ".json", ".jsonl", ".html",
-                     ".js", ".cjs", ".css", ".cs", ".csproj", ".xaml", ".txt"}
     sources = [p for p in ROOT.iterdir() if p.is_file()]
     for directory in ("skills", "scripts", "tests", "docs", "evals", ".github"):
         sources.extend(p for p in (ROOT / directory).rglob("*") if p.is_file())
     for path in sources:
-        if path.suffix in text_suffixes or path.name in {"VERSION", "LICENSE", ".editorconfig", ".gitattributes", ".gitignore"}:
+        if path.suffix in TEXT_SUFFIXES or path.name in TEXT_NAMES:
             check_text(path)
     cases = json.loads((ROOT / "evals/cases.json").read_text(encoding="utf-8"))
     if len({case["id"] for case in cases}) != len(cases):

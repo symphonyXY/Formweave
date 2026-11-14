@@ -33,4 +33,8 @@
 
 清单或校验器变更需覆盖非法 YAML、重复键、字段类型和长度边界，且复制后的独立包仍可通过校验。修改触发描述时补充容易混淆的正反案例；未实际运行模型的案例只记为待评测，不以单元测试结果代替行为结论。
 
-更新动效快照时，逐项对照 LuckyMaomi 的页面与 animations.json、Motion.Lab 的卡片与 data/effects.ts，复核原始 ID、分类、参数、来源提交和许可。各来源的 ID 分别排序、以换行连接并取 UTF-8 SHA-256，更新 `tests/test_motion_catalog.py` 的指纹。
+当前四包将运行环境写入 SKILL.md 正文，头部使用 name、description、license、metadata，以兼容 skill-creator 通用校验器。仓库校验器仍兼容旧包的可选 compatibility 字段。不要删去环境说明或修改宿主工具来获取通过结果。独立包校验同时检查文本格式及 references 的链接可达性；四个真实包的安装、更新和故障恢复已纳入 unittest。
+
+动效资料采用“方法 → 来源导航 → 单站目录”分层：motion.md 负责桌面决策，motion-index.md 只做来源选择，motion-luckymaomi-index.md、motion-lab-index.md、motion-hub-index.md 分别保留各站元数据和许可。调整参考结构时检查调用者和包内可达性，保留已有导航路径；不要仅为缩短行数移动内容。
+
+更新动效快照时，对照 LuckyMaomi 的页面与 animations.json、Motion.Lab 的卡片与 data/effects.ts、Motion Hub（holynova/web-motion-showcase）的目录与 data/motions.js，复核原始 ID、分类、参数、来源提交和许可。Motion Hub 的详情 ID 位于 URL 查询参数，不能按路径末段解析。各来源的 ID 分别排序、以换行连接并取 UTF-8 SHA-256，更新 `tests/test_motion_catalog.py` 的指纹。保留来源命名空间，不按同名 ID 合并；页面抽查、源码核对、目录覆盖和原生运行分别记录。

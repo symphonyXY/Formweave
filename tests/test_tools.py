@@ -5,6 +5,7 @@ from pathlib import Path
 import py_compile
 import sys
 import subprocess
+import shutil
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -88,6 +89,41 @@ class FilesystemTests(unittest.TestCase):
         self.assertEqual(manage.inventory(self.target), original)
         self.assertEqual(list(self.dest.iterdir()), [self.target])
 
+    def test_corrupt_receipts_are_rejected_without_mutation(self):
+        self.call("install")
+        receipt = self.target / manage.RECEIPT
+        valid = receipt.read_text(encoding="utf-8")
+        data = json.loads(valid)
+        invalid = [valid.replace('"format": 1', '"format": true'),
+                   valid.replace('"format": 1', '"format": 0, "format": 1'),
+                   json.dumps(dict(data, entries=[]))]
+        for raw in invalid:
+            with self.subTest(receipt=raw[:80]):
+                receipt.write_text(raw, encoding="utf-8")
+                before = manage.inventory(self.target)
+                with self.assertRaises(ValueError):
+                    self.call("verify")
+                self.assertEqual(manage.inventory(self.target), before)
+        receipt.write_text(valid, encoding="utf-8")
+        self.call("verify")
+
+    def test_failed_restore_preserves_recovery_tree(self):
+        self.call("install")
+        original = manage.inventory(self.target)
+        (self.skill / "SKILL.md").write_text("changed")
+        rename = Path.rename
+        def fail_swap_and_restore(path, target):
+            if path.name in {"new", "previous"}:
+                raise OSError("simulated restore failure")
+            return rename(path, target)
+        with patch.object(Path, "rename", fail_swap_and_restore), self.assertRaises(OSError):
+            self.call("update")
+        work, = self.dest.glob(".formweave-stage-*")
+        self.assertEqual(manage.inventory(work / "previous"), original)
+        self.assertTrue((work / "new/SKILL.md").is_file())
+        self.assertFalse(self.target.exists())
+        self.assertFalse((self.dest / ".formweave-install.lock").exists())
+
     def test_links_lock_and_missing_verify(self):
         with self.assertRaises(ValueError):
             self.call("verify")
@@ -135,3 +171,46 @@ class FilesystemTests(unittest.TestCase):
             self.assertEqual(list(outside.iterdir()), [])
         finally:
             link.rmdir()
+
+
+class CompletePackageTests(unittest.TestCase):
+    def test_install_update_and_recovery_for_all_real_packages(self):
+        with tempfile.TemporaryDirectory(prefix="formweave-packages-") as temporary:
+            boundary = Path(temporary).resolve()
+            self.assertEqual(boundary.parent, Path(tempfile.gettempdir()).resolve())
+            source, dest = boundary / "source", boundary / "installed"
+            shutil.copytree(ROOT / "skills", source)
+            dest.mkdir()
+            unrelated = dest / "user-notes.txt"
+            unrelated.write_text("keep", encoding="utf-8")
+            with patch.object(manage, "SKILLS", source):
+                manage.manage("install", dest, manage.NAMES)
+                manage.manage("verify", dest, manage.NAMES)
+                for name in manage.NAMES:
+                    doc = source / name / "references/motion.md"
+                    doc.write_text(doc.read_text(encoding="utf-8") + "\n隔离更新标记。\n",
+                                   encoding="utf-8", newline="\n")
+                manage.manage("update", dest, manage.NAMES)
+                manage.manage("verify", dest, manage.NAMES)
+                for name in manage.NAMES:
+                    target = dest / name
+                    validate.validate_skill(target)
+                    original = manage.inventory(target)
+                    doc = source / name / "SKILL.md"
+                    doc.write_text(doc.read_text(encoding="utf-8") + "\n隔离失败恢复标记。\n",
+                                   encoding="utf-8", newline="\n")
+                    rename = Path.rename
+                    def fail_stage(path, destination):
+                        self.assertTrue(path.resolve().is_relative_to(boundary))
+                        self.assertTrue(destination.resolve().is_relative_to(boundary))
+                        if path.name == "new":
+                            raise OSError("injected swap failure")
+                        return rename(path, destination)
+                    with patch.object(Path, "rename", fail_stage), self.assertRaises(OSError):
+                        manage.manage("update", dest, [name])
+                    self.assertEqual(manage.inventory(target), original)
+                    validate.validate_skill(target)
+                    manage.manage("update", dest, [name])
+                    manage.manage("verify", dest, [name])
+                self.assertEqual(unrelated.read_text(encoding="utf-8"), "keep")
+                self.assertEqual({path.name for path in dest.iterdir()}, {*manage.NAMES, unrelated.name})

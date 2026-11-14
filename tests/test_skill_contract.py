@@ -9,6 +9,7 @@ sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 import validate
+import yaml
 
 
 class SkillContractTests(unittest.TestCase):
@@ -17,7 +18,7 @@ class SkillContractTests(unittest.TestCase):
         self.addCleanup(temp.cleanup)
         self.folder = Path(temp.name) / "sample-skill"
         (self.folder / "agents").mkdir(parents=True)
-        (self.folder / "LICENSE").write_text("MIT\n", encoding="utf-8")
+        (self.folder / "LICENSE").write_text("MIT\n", encoding="utf-8", newline="\n")
         self.header = "name: sample-skill\ndescription: 测试技能\n"
         self.agent = ('interface:\n  display_name: "测试"\n'
                       '  short_description: "用于验证独立技能安装后仍能读取清单并拒绝损坏的界面元数据。"\n'
@@ -59,6 +60,33 @@ class SkillContractTests(unittest.TestCase):
         self.write(body=" \n")
         with self.assertRaises(ValueError):
             validate.validate_skill(self.folder)
+
+    def test_malformed_yaml_is_rejected(self):
+        self.write("name: [\ndescription: invalid\n")
+        with self.assertRaises((ValueError, yaml.YAMLError)):
+            validate.validate_skill(self.folder)
+
+    def test_standalone_checks_all_packaged_text(self):
+        for relative in ("SKILL.md", "agents/openai.yaml", "helper.py"):
+            with self.subTest(path=relative):
+                self.write()
+                target = self.folder / relative
+                original = target.read_bytes() if target.exists() else b"answer = 42\n"
+                target.write_bytes(original.replace(b"\n", b"\r\n"))
+                with self.assertRaises(ValueError):
+                    validate.validate_skill(self.folder)
+                target.write_bytes(original)
+
+    def test_reference_graph_rejects_orphans_and_accepts_cycles(self):
+        references = self.folder / "references"
+        references.mkdir()
+        first, second = references / "first.md", references / "second.md"
+        first.write_text("[next](second.md)\n", encoding="utf-8", newline="\n")
+        second.write_text("[back](first.md)\n", encoding="utf-8", newline="\n")
+        with self.assertRaises(ValueError):
+            validate.validate_skill(self.folder)
+        self.write(body="[read](references/first.md)\n")
+        validate.validate_skill(self.folder)
 
     def test_invalid_ui_and_duplicate_nested_fields(self):
         invalid = ["[]\n", "interface: []\n", self.agent.replace('"测试"', "true"),

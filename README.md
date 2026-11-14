@@ -174,7 +174,11 @@ py -3.13 -B scripts\manage.py verify --dest "$env:USERPROFILE/.agents/skills"
 
 常见推进顺序是“规划 → 预览 → 开发 → 审查”；已有明确范围时，可以直接从相应阶段开始。
 
-四个技能均自带[桌面动效决策](skills/formweave-build/references/motion.md)与[双站来源索引](skills/formweave-build/references/motion-index.md)，收录 217 个来源条目。需要具体效果时再查索引，并验证连续操作、中断与减少动效；静态截图无法证明这些行为。
+四个技能均自带[桌面动效决策](skills/formweave-build/references/motion.md)与[来源索引](skills/formweave-build/references/motion-index.md)。当前工作区在原有 LuckyMaomi 57 项、Motion.Lab 160 项基础上补入 [Motion Hub 60 项](skills/formweave-build/references/motion-hub-index.md)，合计 277 个来源条目，尚未定版。索引按需读取，不代表全部效果已移植或通过原生验收。
+
+每个入口先说明运行环境，再按“执行、按需参考、交付”组织。动效来源导航只列站点与查找方式，三站目录分别读取；安装后每个包仍可独立工作。范围确认从已有材料提取信息，只询问影响当前方案的缺口。
+
+参考这两个网站做桌面设计时，按[界面与动效转化](skills/formweave-build/references/interface-motion.md)把搜索分类、检查器、局部调参、主题和标签指示器融入主任务。规划记录状态与验收，预览比较普通/减少动效，开发绑定真实业务，审查复验连续操作和焦点；保留现有框架与已批准范围。可以请求：“借鉴 Motion.Lab 的检查器和 Motion Hub 的分段标签，为现有 WPF 库存工具先做独立预览，表格保持稳定。”
 
 ## 更新
 
@@ -191,9 +195,11 @@ py -3.13 -B scripts\manage.py update --dest "$env:USERPROFILE/.agents/skills"
 <details>
 <summary>处理安装冲突与中断</summary>
 
-目标没有收据、存在本地修改、包含链接、锁已存在时，安装器会停止。先备份和比较本地差异，再决定如何保留自定义内容。
+目标没有收据、收据格式异常、存在本地修改、包含链接或锁已存在时，安装器会停止。先备份和比较现场，不要自行重建收据来覆盖差异。
 
-操作系统中断后，先确认锁记录的进程已结束，核对同目录 `.formweave-stage-*` 内的 `previous`、`new` 与现有目标。目标缺失时可将完整 `previous` 恢复为原名；完成备份和校验后，才移除对应残留锁并重新 `verify`。不要批量删除技能目录。
+操作系统中断后，先确认锁记录的进程已结束，备份并核对同目录 `.formweave-stage-*` 内的 `previous`、`new` 与现有目标。只有目标确实缺失且 `previous` 完整时，才将该副本恢复为原名；自动恢复失败也会保留副本并报告路径。核对现场后才处理对应残留锁，不要批量删除技能目录。
+
+恢复出的旧包可能与当前源码不同，此时 `verify` 报差异不等于恢复失败。准备继续升级时，先用原目标路径执行 `update`，成功后再 `verify`；若要保留旧包，则使用与旧包相同的源码核验。
 
 </details>
 
