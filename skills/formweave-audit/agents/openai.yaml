@@ -1,0 +1,4 @@
+interface:
+  display_name: "织形 · 审查"
+  short_description: "审查 Windows 桌面界面，按证据、影响和优先级提出修改建议。"
+  default_prompt: "使用 $formweave-audit，审查我的桌面界面并给出复验方法。"

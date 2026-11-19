@@ -1,0 +1,4 @@
+interface:
+  display_name: "织形 · 预览"
+  short_description: "制作可查看或可点击的 Windows 桌面预览，标明模拟交互范围。"
+  default_prompt: "使用 $formweave-preview，为我的桌面工作流制作可点击预览。"

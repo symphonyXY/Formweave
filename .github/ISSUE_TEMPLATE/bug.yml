@@ -1,0 +1,25 @@
+name: 问题报告
+description: 报告安装、技能工作流、文档或随包样例的问题。
+title: "[Bug] "
+body:
+  - type: textarea
+    id: environment
+    attributes:
+      label: 版本与环境
+      description: 请提供 Formweave 版本或提交，以及相关的客户端、Windows 构建、架构和工具版本。
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤与预期结果
+      description: 给出相关技能、最小输入和运行命令；说明你期待看到什么。
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际结果与证据
+      description: 附上脱敏的错误、退出码、截图或日志。不要提交凭据、用户数据或未授权素材；漏洞请勿公开其可被滥用的细节。
+    validations:
+      required: true

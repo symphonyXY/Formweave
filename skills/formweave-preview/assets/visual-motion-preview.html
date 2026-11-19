@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-view="compact">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>层光 · 素材总览</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --base: #101723;
+      --ground: #172131;
+      --text: #f0f5ff;
+      --muted: #b5c2d4;
+      --accent: #b8d9ff;
+      --surface: rgb(24 35 51 / .88);
+      --selected: #304963;
+      --rule: rgb(207 226 255 / .27);
+      --focus: #a9d8ff;
+      --beam: rgb(111 163 237 / .34);
+      --rim: rgb(177 210 255 / .42);
+      --shadow: rgb(0 0 0 / .24);
+      --surface-solid: #1b2a3e;
+      --ease: cubic-bezier(.22, .78, .24, 1);
+      font-family: "Segoe UI", "Microsoft YaHei UI", sans-serif;
+    }
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --base: #e5ecf4;
+      --ground: #d0deed;
+      --text: #15253a;
+      --muted: #415873;
+      --accent: #285985;
+      --surface: rgb(248 251 255 / .86);
+      --selected: #dbeaff;
+      --rule: rgb(58 90 132 / .29);
+      --focus: #135ba6;
+      --beam: rgb(255 255 255 / .78);
+      --rim: rgb(250 253 255 / .9);
+      --shadow: rgb(55 86 126 / .18);
+      --surface-solid: #f7fbff;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      min-width: 0; min-height: 100vh; margin: 0; color: var(--text);
+      background: linear-gradient(145deg, var(--base), var(--ground));
+    }
+    :where(h1, h2, p) { margin: 0; }
+    button { color: inherit; font: inherit; cursor: pointer; }
+    button:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+    button:disabled { cursor: default; }
+    .definitions { position: absolute; width: 0; height: 0; overflow: hidden; }
+    .ambient { position: fixed; z-index: -1; inset: 0; overflow: hidden; pointer-events: none; }
+    .ambient::before, .ambient::after { content: ""; position: absolute; pointer-events: none; }
+    .ambient::before {
+      width: 88vw; height: 86vh; top: 7%; right: -13%;
+      background: radial-gradient(ellipse, var(--beam), transparent 66%);
+      animation: wash 15s ease-in-out infinite alternate;
+    }
+    .ambient::after {
+      width: 92vw; height: 68vh; top: 9%; left: 30%;
+      border: 1px solid var(--rule); border-radius: 50%;
+      background: linear-gradient(165deg, transparent 62%, var(--beam));
+      box-shadow: inset 0 -2px 4px var(--rim), 0 22px 80px var(--shadow);
+      transform: rotate(-21deg);
+    }
+    @keyframes wash { to { transform: translate(-12%, 7%) scale(1.13); } }
+    :root[data-paused] .ambient::before { animation-play-state: paused; }
+    :root[data-reduced] .ambient::before { animation: none; }
+    @media (prefers-reduced-motion: reduce) { .ambient::before { animation: none; } }
+    .app {
+      width: min(100%, 1440px); margin-inline: auto; min-height: 100vh;
+      display: flex; flex-direction: column; gap: 22px; padding: 26px clamp(16px, 4vw, 54px) 20px;
+      isolation: isolate;
+    }
+    .topbar, .section-bar, .footer { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .mark {
+      display: grid; width: 39px; height: 39px; place-items: center; border-radius: 12px;
+      border: 1px solid var(--rule); color: var(--accent); background: var(--surface);
+    }
+    .mark svg { width: 23px; height: 23px; }
+    .brand strong { display: block; font-size: 17px; letter-spacing: .14em; }
+    .label { color: var(--muted); font-size: 11px; letter-spacing: .17em; font-weight: 700; }
+    .tools { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .segment, .quiet {
+      display: inline-flex; gap: 3px; border: 1px solid var(--rule); border-radius: 999px;
+      padding: 3px; background: var(--surface); box-shadow: inset 0 1px 0 var(--rule);
+    }
+    .segment button, .quiet {
+      min-height: 34px; padding: 4px 13px; border-radius: 999px; white-space: nowrap; font-size: 13px;
+    }
+    .segment button { min-width: 60px; background: transparent; border: 1px solid transparent; }
+    .segment button:hover, .quiet:hover { border-color: var(--focus); }
+    .segment button[aria-pressed="true"], .quiet[aria-pressed="true"] {
+      border-color: var(--rule); background: var(--selected); color: var(--text); font-weight: 650;
+    }
+    .segment button[aria-pressed="true"]:hover { border-color: var(--focus); }
+    .section-bar { border-top: 1px solid var(--rule); padding-top: 20px; }
+    h1 { font-size: clamp(22px, 3.2vw, 34px); letter-spacing: .03em; }
+    .section-caption { margin-top: 4px; color: var(--muted); font-size: 13px; }
+    .workspace { flex: 1; display: flex; flex-direction: column; min-width: 0; gap: 12px; }
+    .stage {
+      display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.18fr); align-items: center;
+      min-height: 320px; gap: 20px; padding: 20px clamp(20px, 5vw, 68px);
+      border: 1px solid var(--rule); border-radius: 24px;
+      background: linear-gradient(118deg, var(--surface), transparent 78%);
+      box-shadow: inset 0 1px 0 var(--rule);
+    }
+    .intro { min-width: 0; }
+    .intro h2 { margin: 7px 0 6px; font-size: clamp(26px, 4.6vw, 57px); line-height: 1.12; letter-spacing: -.025em; }
+    .summary { min-height: 1.6em; color: var(--accent); font-size: 13px; }
+    .artwork { display: block; width: 100%; max-height: 285px; overflow: visible; }
+    .tabs { display: inline-flex; gap: 10px; border-bottom: 1px solid var(--rule); margin-top: 19px; }
+    .tabs button {
+      background: transparent; border: 0; border-bottom: 2px solid transparent;
+      color: var(--muted); min-height: 34px; padding: 2px 9px; font-size: 13px;
+    }
+    .tabs button:hover, .tabs button[aria-selected="true"] { color: var(--text); }
+    .tabs button[aria-selected="true"] { border-bottom-color: var(--accent); font-weight: 700; }
+    .tabpanel {
+      margin-top: 8px; min-height: 3lh; max-width: 35ch; color: var(--muted);
+      font-size: 14px; line-height: 1.65;
+    }
+    .dock {
+      flex: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 148px));
+      justify-content: center; align-items: end; align-content: end; gap: 10px;
+      min-height: 181px; padding: 0 3px 6px;
+    }
+    :root[data-view="grid"] .dock {
+      grid-template-columns: repeat(3, minmax(0, 235px)); justify-content: start; align-content: start; gap: 14px;
+    }
+    .card {
+      min-width: 0; min-height: 112px; padding: 9px 10px 10px; text-align: start;
+      display: grid; align-content: space-between; gap: 4px; background: var(--surface);
+      border: 1px solid var(--rule); border-radius: 15px; transform-origin: top left;
+      box-shadow: inset 0 1px 0 var(--rule), 0 8px 20px var(--shadow);
+    }
+    :root[data-view="grid"] .card { min-height: 170px; padding: 12px 14px; }
+    .card:hover { border-color: var(--focus); }
+    .card[aria-pressed="true"] { background: var(--selected); border-color: var(--focus); }
+    .card-art { width: 100%; height: 62px; overflow: visible; }
+    :root[data-view="grid"] .card-art { height: 92px; }
+    .card-name { display: flex; justify-content: space-between; gap: 6px; font-size: 14px; font-weight: 700; }
+    .card-name::after { content: "✓"; color: var(--accent); visibility: hidden; }
+    .card[aria-pressed="true"] .card-name::after { visibility: visible; }
+    .card-meta { display: none; color: var(--muted); font-size: 12px; }
+    :root[data-view="grid"] .card-meta { display: block; }
+    .footer { color: var(--muted); font-size: 12px; border-top: 1px solid var(--rule); padding-top: 10px; line-height: 1.5; }
+    .footer span:last-child { text-align: end; }
+    @media (max-width: 680px) {
+      .app { gap: 16px; }
+      .topbar, .section-bar { flex-wrap: wrap; }
+      .stage { padding: 18px; min-height: 0; gap: 8px; }
+      .dock { grid-template-columns: repeat(3, minmax(0, 1fr)); min-height: 0; }
+      :root[data-view="grid"] .dock { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    }
+    @media (max-width: 440px) {
+      .stage { grid-template-columns: 1fr; }
+      .artwork { height: 140px; }
+      .card { padding-inline: 6px; }
+      .card-name { font-size: 12px; }
+      .footer { align-items: start; }
+    }
+    @media (forced-colors: active) {
+      :root[data-theme] { --surface: Canvas; --rule: ButtonText; --text: CanvasText; --muted: CanvasText; --accent: LinkText; --focus: Highlight; }
+      .ambient { display: none; }
+      .stage, .card, .segment, .quiet { background: Canvas; box-shadow: none; }
+      .card[aria-pressed="true"], .segment button[aria-pressed="true"], .quiet[aria-pressed="true"], .tabs button[aria-selected="true"] {
+        color: Highlight; border-color: Highlight;
+      }
+    }
+  </style>
+</head>
+<body>
+  <svg class="definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <linearGradient id="orbit-fill" x2="1" y2="1">
+        <stop stop-color="#d8f0ff"/><stop offset=".28" stop-color="#619bff"/>
+        <stop offset=".6" stop-color="#233c82"/><stop offset=".88" stop-color="#7ab5e6"/><stop offset="1" stop-color="#e3f6ff"/>
+      </linearGradient>
+      <linearGradient id="fold-fill" x2="1" y2="1">
+        <stop stop-color="#ffeee0"/><stop offset=".27" stop-color="#f0ac84"/>
+        <stop offset=".59" stop-color="#905b7c"/><stop offset="1" stop-color="#3b325f"/>
+      </linearGradient>
+      <linearGradient id="flow-fill" x2="1" y2="1">
+        <stop stop-color="#d4fff0"/><stop offset=".38" stop-color="#62cbbb"/>
+        <stop offset=".67" stop-color="#275f7a"/><stop offset="1" stop-color="#a7e2f4"/>
+      </linearGradient>
+      <radialGradient id="ground-shadow">
+        <stop stop-color="#142139" stop-opacity=".46"/><stop offset="1" stop-color="#142139" stop-opacity="0"/>
+      </radialGradient>
+      <symbol id="orbit" viewBox="0 0 480 280">
+        <ellipse cx="246" cy="249" rx="166" ry="20" fill="url(#ground-shadow)"/>
+        <g transform="rotate(-24 240 135)">
+          <ellipse cx="240" cy="145" rx="157" ry="78" fill="none" stroke="#091323" stroke-opacity=".38" stroke-width="32"/>
+          <ellipse cx="240" cy="134" rx="157" ry="78" fill="none" stroke="url(#orbit-fill)" stroke-width="31"/>
+          <ellipse cx="240" cy="130" rx="167" ry="85" fill="none" stroke="#dff6ff" stroke-opacity=".57"/>
+        </g>
+        <circle cx="243" cy="131" r="35" fill="url(#orbit-fill)" stroke="#ceebff" stroke-opacity=".7"/>
+        <path d="M89 199 391 70 M128 220 365 119" stroke="#bce0ff" stroke-opacity=".5" stroke-dasharray="2 7"/>
+      </symbol>
+      <symbol id="fold" viewBox="0 0 480 280">
+        <ellipse cx="246" cy="249" rx="166" ry="20" fill="url(#ground-shadow)"/>
+        <path d="m74 150 151-102 170 52-155 99Z" fill="url(#fold-fill)" stroke="#ffe4d0" stroke-opacity=".75"/>
+        <path d="m74 150 166 49 155-99-38 76-123 60-113-33Z" fill="#714f75" stroke="#edc5cc" stroke-opacity=".68"/>
+        <path d="m74 150 151-102 15 151Z" fill="#ffc9a8" fill-opacity=".38"/>
+        <path d="m225 48 15 151-6 37M74 150l166 49 155-99" fill="none" stroke="#ffebd5" stroke-opacity=".8"/>
+        <path d="m104 133 148-94 171 49" fill="none" stroke="#ebc7bb" stroke-opacity=".6" stroke-dasharray="2 7"/>
+      </symbol>
+      <symbol id="flow" viewBox="0 0 480 280">
+        <ellipse cx="246" cy="249" rx="166" ry="20" fill="url(#ground-shadow)"/>
+        <path d="M78 180c82 81 126-144 214-129 39 6 45 95 108 48" fill="none" stroke="#122a3d" stroke-opacity=".48" stroke-width="43" stroke-linecap="round"/>
+        <path d="M78 170c82 81 126-144 214-129 39 6 45 95 108 48" fill="none" stroke="url(#flow-fill)" stroke-width="37" stroke-linecap="round"/>
+        <path d="M78 162c82 81 126-144 214-129 39 6 45 95 108 48" fill="none" stroke="#d6fff2" stroke-opacity=".61"/>
+        <path d="M88 212c87 34 139-118 203-130 52-10 53 79 100 39" fill="none" stroke="#b1e3da" stroke-opacity=".6" stroke-dasharray="2 7"/>
+      </symbol>
+    </defs>
+  </svg>
+  <div class="app">
+    <div class="ambient" aria-hidden="true"></div>
+    <header class="topbar">
+      <div class="brand">
+        <span class="mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m12 2 9 10-9 10-9-10zM3 12h18M12 2v20"/></svg>
+        </span>
+        <div><strong>层光</strong><p class="label">FORMWEAVE / MATERIAL NOTES</p></div>
+      </div>
+      <div class="tools">
+        <div class="segment" role="group" aria-label="主题">
+          <button type="button" data-theme-choice="light" aria-pressed="false">浅色</button>
+          <button type="button" data-theme-choice="dark" aria-pressed="true">深色</button>
+        </div>
+        <button class="quiet" id="reduce" type="button" aria-pressed="false">减少动效</button>
+      </div>
+    </header>
+    <main class="workspace">
+      <div class="section-bar">
+        <div><h1>素材总览</h1><p class="section-caption">3 份光影研究 · 合成素材</p></div>
+        <div class="segment" role="group" aria-label="素材视图">
+          <button type="button" data-view-choice="compact" aria-pressed="true">紧凑</button>
+          <button type="button" data-view-choice="grid" aria-pressed="false">网格</button>
+        </div>
+      </div>
+      <section class="stage" aria-labelledby="asset-name">
+        <div class="intro">
+          <p class="label" id="asset-series"></p>
+          <h2 id="asset-name"></h2>
+          <p class="summary" id="asset-state"></p>
+          <div class="tabs" role="tablist" aria-label="预览内容">
+            <button id="overview-tab" role="tab" type="button" aria-controls="overview" aria-selected="true" tabindex="0">概览</button>
+            <button id="material-tab" role="tab" type="button" aria-controls="material" aria-selected="false" tabindex="-1">材质</button>
+          </div>
+          <p class="tabpanel" id="overview" role="tabpanel" aria-labelledby="overview-tab"></p>
+          <p class="tabpanel" id="material" role="tabpanel" aria-labelledby="material-tab" hidden></p>
+        </div>
+        <svg class="artwork" viewBox="0 0 480 280" aria-hidden="true"><use id="art" href="#orbit"/></svg>
+      </section>
+      <div class="dock" id="dock" role="group" aria-label="素材卡片"></div>
+    </main>
+    <footer class="footer">
+      <span id="selection" role="status"></span>
+      <span>悬停或按 Tab 预览 · 点击或按 Enter 选中</span>
+    </footer>
+  </div>
+  <script>
+    const assets = [
+      { id: 'orbit', order: '01', name: '环形光谱', type: '冷光 · 曲面',
+        overview: '一束冷光掠过环形曲面，最亮处只留在边缘。',
+        material: '用蓝灰中间色连接暗面和高光，让轮廓清晰而不刺眼。' },
+      { id: 'fold', order: '02', name: '折面试样', type: '暖光 · 折面',
+        overview: '三片折面共用一条亮边，用不同明度表现折叠方向。',
+        material: '暖桃色迎光面与紫灰背光面形成冷暖对照，分界不用重阴影。' },
+      { id: 'flow', order: '03', name: '轨迹研究', type: '青光 · 曲线',
+        overview: '连续的曲线把视线从左下引到右上，不需要移动控件。',
+        material: '窄亮线与宽渐变带分开：用亮线定轮廓，用渐变给体积。' }
+    ];
+    const root = document.documentElement;
+    const dock = document.querySelector('#dock');
+    const tabs = [...document.querySelectorAll('[role="tab"]')];
+    const panels = [...document.querySelectorAll('[role="tabpanel"]')];
+    const themeControls = [...document.querySelectorAll('[data-theme-choice]')];
+    const viewControls = [...document.querySelectorAll('[data-view-choice]')];
+    const compactWindow = matchMedia('(max-width: 680px)');
+    const systemMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    const reduce = document.querySelector('#reduce');
+    const series = document.querySelector('#asset-series');
+    const title = document.querySelector('#asset-name');
+    const state = document.querySelector('#asset-state');
+    const art = document.querySelector('#art');
+    const artwork = art.ownerSVGElement;
+    const selection = document.querySelector('#selection');
+    let pinned = assets[0];
+    let hovered = null;
+    let focused = null;
+    let previous = null;
+    let chosenTab = 0;
+    let userReduced = false;
+
+    const cards = assets.map(asset => {
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'card';
+      card.setAttribute('aria-label', `${asset.name}，${asset.type}`);
+      card.innerHTML = `<svg class="card-art" viewBox="0 0 480 280" aria-hidden="true"><use href="#${asset.id}"/></svg>
+        <span class="card-name">${asset.name}</span><span class="card-meta" aria-hidden="true">${asset.type}</span>`;
+      card.addEventListener('pointerenter', event => {
+        if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
+          hovered = asset;
+          renderAsset();
+        }
+      });
+      card.addEventListener('pointerleave', () => {
+        if (hovered === asset) {
+          hovered = null;
+          renderAsset();
+        }
+      });
+      card.addEventListener('focus', () => {
+        if (card.matches(':focus-visible')) {
+          focused = asset;
+          renderAsset();
+        }
+      });
+      card.addEventListener('blur', () => {
+        if (focused === asset) {
+          focused = null;
+          renderAsset();
+        }
+      });
+      card.addEventListener('click', () => {
+        pinned = asset;
+        selection.textContent = `已选中：${asset.name}`;
+        renderAsset();
+      });
+      dock.append(card);
+      return card;
+    });
+
+    function stop(elements) {
+      for (const element of elements) {
+        for (const animation of element.getAnimations()) animation.cancel();
+      }
+    }
+
+    function fade(elements, duration) {
+      stop(elements);
+      if (root.hasAttribute('data-reduced')) return;
+      for (const element of elements) {
+        element.animate([{ opacity: .58 }, { opacity: 1 }], { duration, easing: 'ease-out' });
+      }
+    }
+
+    function renderAsset() {
+      const asset = hovered ?? focused ?? pinned;
+      cards.forEach((card, index) => card.setAttribute('aria-pressed', String(assets[index] === pinned)));
+      state.textContent = `${asset.type} / ${asset === pinned ? '已选中' : '临时预览'}`;
+      if (asset === previous) return;
+      series.textContent = `STUDY ${asset.order} / 0${assets.length}`;
+      title.textContent = asset.name;
+      art.setAttribute('href', `#${asset.id}`);
+      panels[0].textContent = asset.overview;
+      panels[1].textContent = asset.material;
+      if (previous) fade([series, title, artwork, panels[chosenTab]], 160);
+      previous = asset;
+    }
+
+    function switchView(view) {
+      if (root.dataset.view === view) return;
+      const animate = !root.hasAttribute('data-reduced') && !compactWindow.matches;
+      const current = animate ? cards.map(card => card.getBoundingClientRect()) : [];
+      stop(cards);
+      root.dataset.view = view;
+      viewControls.forEach(control => control.setAttribute('aria-pressed', String(control.dataset.viewChoice === view)));
+      if (!animate) return;
+      const targets = cards.map(card => card.getBoundingClientRect());
+      cards.forEach((card, index) => {
+        const start = current[index];
+        const target = targets[index];
+        card.animate([
+          { transform: `translate(${start.left - target.left}px, ${start.top - target.top}px) scale(${start.width / target.width}, ${start.height / target.height})` },
+          { transform: 'none' }
+        ], { duration: 260, easing: getComputedStyle(root).getPropertyValue('--ease').trim() });
+      });
+    }
+
+    function activateTab(index) {
+      if (index === chosenTab) return;
+      stop(panels);
+      chosenTab = index;
+      tabs.forEach((tab, tabIndex) => {
+        tab.setAttribute('aria-selected', String(tabIndex === index));
+        tab.tabIndex = tabIndex === index ? 0 : -1;
+        panels[tabIndex].hidden = tabIndex !== index;
+      });
+      fade([panels[index]], 150);
+    }
+
+    function syncMotion() {
+      const reduced = systemMotion.matches || userReduced;
+      root.toggleAttribute('data-reduced', reduced);
+      reduce.setAttribute('aria-pressed', String(reduced));
+      reduce.disabled = systemMotion.matches;
+      reduce.textContent = systemMotion.matches ? '系统减少动效' : '减少动效';
+      if (reduced) stop([...cards, series, title, artwork, ...panels]);
+    }
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => activateTab(index));
+      tab.addEventListener('keydown', event => {
+        const directions = { ArrowLeft: (index + tabs.length - 1) % tabs.length,
+          ArrowRight: (index + 1) % tabs.length, Home: 0, End: tabs.length - 1 };
+        if (!Object.hasOwn(directions, event.key)) return;
+        event.preventDefault();
+        const next = directions[event.key];
+        activateTab(next);
+        tabs[next].focus();
+      });
+    });
+    themeControls.forEach(control => control.addEventListener('click', () => {
+      root.dataset.theme = control.dataset.themeChoice;
+      themeControls.forEach(item => item.setAttribute('aria-pressed', String(item === control)));
+    }));
+    viewControls.forEach(control => control.addEventListener('click', () => switchView(control.dataset.viewChoice)));
+    dock.addEventListener('keydown', event => {
+      if (event.key !== 'Escape') return;
+      hovered = null;
+      focused = null;
+      renderAsset();
+    });
+    window.addEventListener('blur', () => {
+      hovered = null;
+      focused = null;
+      renderAsset();
+    });
+    window.addEventListener('resize', () => stop(cards));
+    reduce.addEventListener('click', () => { userReduced = !userReduced; syncMotion(); });
+    systemMotion.addEventListener('change', syncMotion);
+    document.addEventListener('visibilitychange', () => {
+      root.toggleAttribute('data-paused', document.hidden);
+      if (document.hidden) stop(cards);
+    });
+    root.toggleAttribute('data-paused', document.hidden);
+    selection.textContent = `已选中：${pinned.name}`;
+    syncMotion();
+    renderAsset();
+  </script>
+</body>
+</html>

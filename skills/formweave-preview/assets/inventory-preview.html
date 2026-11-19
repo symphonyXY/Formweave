@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>差异复核 · 织形</title>
+<style>
+:root {
+  color-scheme: light;
+  --ink: #19332f;
+  --muted: #526964;
+  --line: #d5e0dc;
+  --accent: #126556;
+  --wash: #e2f1eb;
+  font: 14px/1.5 "Segoe UI", "Microsoft YaHei UI", sans-serif;
+  color: var(--ink);
+  background: #f1f5f2;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { display: flex; flex-direction: column; height: 100dvh; max-width: 1480px; margin: auto; padding: 0 clamp(10px, 2vw, 32px) 12px; }
+header, .toolbar, .filters, footer, .actions, .pair {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+header, .toolbar, footer, .batch, .hint { flex: none; }
+header { min-height: 62px; border-bottom: 1px solid var(--line); gap: 14px; }
+h1, h2, h3, p { margin: 0; }
+h1 { font-size: 23px; letter-spacing: -.04em; }
+h2, summary { font-size: 16px; font-weight: 650; }
+header small { margin-left: auto; color: var(--muted); }
+.batch { display: flex; align-items: center; gap: 12px; padding: 7px 12px; }
+.batch button { margin-left: auto; }
+.toolbar { padding: 12px 0; }
+button, input { font: inherit; }
+button, .search { background: white; border: 1px solid var(--line); border-radius: 5px; }
+button { padding: 5px 10px; color: var(--ink); cursor: pointer; }
+button:hover:enabled { background: var(--wash); }
+button:disabled { color: #697773; background: #eef1ef; cursor: default; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.search { display: flex; padding-left: 8px; align-items: center; }
+.search input { width: 16ch; border: 0; padding: 5px; min-width: 0; }
+.search button { border: 0; color: var(--accent); }
+.filters { gap: 0; }
+.filters button { border-radius: 0; margin-right: -1px; }
+.filters button[aria-pressed=true], #start:enabled { color: white; background: var(--accent); }
+.count { color: var(--muted); }
+#density { margin-left: auto; }
+.workspace { flex: 1 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) 240px; align-items: start; gap: 12px; }
+.panel, details { background: white; border: 1px solid var(--line); border-radius: 8px; }
+.panel { display: flex; flex-direction: column; align-self: stretch; min-width: 0; overflow: hidden; }
+.scroll { flex: 1 0 110px; height: 0; overflow: auto; scrollbar-color: #b7c7bf transparent; }
+table { width: 100%; border-spacing: 0; font-variant-numeric: tabular-nums; }
+th, td { padding: 4px 12px; height: 32px; white-space: nowrap; text-align: right; }
+th { position: sticky; top: 0; background: #eaf0ed; z-index: 1; color: var(--muted); font-size: 12px; }
+th:nth-child(-n+3), td:nth-child(-n+3) { text-align: left; }
+th:first-child, td:first-child { width: 36px; padding-right: 0; }
+td { border-bottom: 1px solid #e8eeea; }
+tbody tr { cursor: pointer; }
+tbody tr:hover { background: #f3f7f4; }
+tbody tr.current { background: var(--wash); box-shadow: inset 3px 0 var(--accent); }
+input[type=checkbox] { accent-color: var(--accent); }
+.compact td { height: 24px; padding-block: 1px; }
+.negative { color: #9c4a24; }
+.positive { color: #126556; }
+summary { cursor: pointer; padding: 12px 16px; }
+#detail { margin: 0 16px 14px; border-top: 1px solid var(--line); padding-top: 12px; }
+#detail h3 { font-size: 22px; margin: 2px 0 8px; }
+.pair { justify-content: space-between; padding: 5px 0; }
+.pair span, .hint, .ref { color: var(--muted); }
+.hint { font-size: 12px; padding: 7px 12px; }
+#empty { padding: 32px 12px; text-align: center; }
+footer { margin-top: 10px; min-height: 44px; justify-content: space-between; }
+progress { width: 70px; accent-color: var(--accent); }
+[hidden] { display: none !important; }
+@media (max-width: 780px) {
+  .workspace { grid-template-columns: minmax(0, 1fr); grid-template-rows: 1fr auto; gap: 6px; }
+  th, td { padding-inline: 5px; }
+  #density { margin-left: 0; }
+}
+@media (forced-colors: active) {
+  tr.current { outline: 1px solid Highlight; outline-offset: -1px; }
+  button[aria-pressed=true] { border: 2px solid Highlight; }
+}
+</style>
+</head>
+<body><main>
+<header><h1>差异复核</h1><small>本地预览 · 模拟数据</small></header>
+<div class="toolbar">
+  <div class="search"><input id="query" aria-label="搜索货号或品名" placeholder="货号或品名"><button id="clear">清除</button></div>
+  <div class="filters" role="group" aria-label="盘点状态"><button data-filter="all" aria-pressed="true">全部</button><button data-filter="diff" aria-pressed="false">有差异</button><button data-filter="even" aria-pressed="false">相符</button></div>
+  <span class="count" role="status"></span>
+  <button id="density" aria-pressed="false">紧凑视图</button>
+</div>
+<div class="workspace">
+  <section class="panel" aria-label="盘点明细"><div class="batch">
+    <label><input id="all" type="checkbox" aria-label="选择所有匹配记录"> 全选匹配项</label>
+    <span id="selection"></span><button id="start" aria-keyshortcuts="Control+Enter" disabled>校验选中项</button>
+  </div><div class="scroll">
+    <table aria-label="盘点明细"><thead><tr><th aria-label="勾选"></th><th>货号</th><th>品名</th><th>账面</th><th>实盘</th><th>差异</th></tr></thead><tbody></tbody></table>
+    <p id="empty" hidden>没有匹配的物料，请调整筛选条件。</p>
+  </div><p class="hint">↑ ↓ 查看　·　空格勾选　·　Ctrl+Enter 校验　·　Esc 取消</p></section>
+  <details open><summary>差异详情</summary><div id="detail"></div></details>
+</div>
+<footer><div><span id="receipt" role="status">勾选物料后可校验</span> <progress hidden aria-label="模拟校验进度"></progress></div>
+  <button id="cancel" aria-keyshortcuts="Escape" hidden>取消任务</button>
+</footer></main>
+<script>
+const $ = selector => document.querySelector(selector);
+const names = ['瓦楞箱', '缠绕膜', '标签纸', '手持终端', '扫描枪', '周转筐'];
+const rows = Array.from({length: 72}, (_, i) => ({
+  id: 'P-' + (2001 + i), name: names[i % names.length], base: 40 + i,
+  delta: [-3, 2, 0, -1][i % 4], bin: 'A-' + String(1 + Math.floor(i / 8)).padStart(2, '0')
+}));
+const checked = new Set();
+let active = rows[0], hits = rows, filter = 'all', job;
+const formatDelta = value => value > 0 ? '+' + value : String(value);
+function inspect(row) {
+  const changed = active !== row;
+  active = row;
+  for (const tr of $('tbody').rows) {
+    const current = tr.dataset.id === row?.id;
+    tr.classList.toggle('current', current);
+    tr.querySelector('input').tabIndex = current ? 0 : -1;
+  }
+  const detail = $('#detail');
+  for (const animation of detail.getAnimations()) animation.cancel();
+  if (!row) {
+    detail.textContent = '暂无匹配记录';
+    return;
+  }
+  const outcome = row.delta === 0 ? '账实相符' : (row.delta > 0 ? '盘盈 ' : '盘亏 ') + Math.abs(row.delta) + ' 件';
+  detail.replaceChildren();
+  const ref = document.createElement('small');
+  ref.className = 'ref';
+  ref.textContent = row.id;
+  const name = document.createElement('h3');
+  name.textContent = row.name;
+  detail.append(ref, name);
+  for (const [label, value] of [['账面', row.base], ['实盘', row.base + row.delta], ['差异', outcome], ['库位', row.bin]]) {
+    const pair = document.createElement('p');
+    pair.className = 'pair';
+    const key = document.createElement('span');
+    key.textContent = label;
+    const amount = document.createElement('strong');
+    amount.textContent = value;
+    pair.append(key, amount);
+    detail.append(pair);
+  }
+  if (changed && $('details').open && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    detail.animate([{ opacity: 0.78 }, { opacity: 1 }], { duration: 120 });
+  }
+}
+function selection() {
+  $('#selection').textContent = '已选 ' + checked.size + ' 项';
+  $('#start').disabled = !!job || !checked.size;
+  if (!job && !$('#receipt').dataset.result) {
+    $('#receipt').textContent = checked.size ? '准备校验' : '勾选物料后可校验';
+  }
+  $('#all').checked = !!hits.length && checked.size === hits.length;
+  $('#all').indeterminate = checked.size > 0 && checked.size < hits.length;
+  $('#all').disabled = !hits.length;
+}
+function draw() {
+  const term = $('#query').value.trim().toLowerCase();
+  hits = rows.filter(row => (row.id + row.name).toLowerCase().includes(term) &&
+    (filter === 'all' || (filter === 'diff') === (row.delta !== 0)));
+  for (const row of checked) if (!hits.includes(row)) checked.delete(row);
+  const body = $('tbody');
+  body.replaceChildren();
+  for (const [index, row] of hits.entries()) {
+    const tr = body.insertRow();
+    tr.dataset.id = row.id;
+    const box = document.createElement('input');
+    box.type = 'checkbox';
+    box.checked = checked.has(row);
+    box.setAttribute('aria-label', '选择 ' + row.id + ' ' + row.name);
+    tr.insertCell().append(box);
+    for (const value of [row.id, row.name, row.base, row.base + row.delta, formatDelta(row.delta)]) {
+      tr.insertCell().textContent = value;
+    }
+    tr.lastElementChild.className = row.delta < 0 ? 'negative' : row.delta > 0 ? 'positive' : '';
+    tr.onclick = () => box.focus();
+    box.onfocus = () => inspect(row);
+    box.onchange = () => {
+      if (box.checked) checked.add(row);
+      else checked.delete(row);
+      selection();
+    };
+    box.onkeydown = event => {
+      if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return;
+      event.preventDefault();
+      const next = Math.max(0, Math.min(hits.length - 1, index + (event.key === 'ArrowDown' ? 1 : -1)));
+      body.rows[next].querySelector('input').focus();
+    };
+  }
+  $('.count').textContent = hits.length + ' 项';
+  $('#empty').hidden = !!hits.length;
+  inspect(hits.includes(active) ? active : hits[0]);
+  selection();
+}
+$('#all').onchange = () => {
+  checked.clear();
+  if ($('#all').checked) for (const row of hits) checked.add(row);
+  draw();
+};
+$('#query').oninput = event => { if (!event.isComposing) draw(); };
+$('#query').oncompositionend = draw;
+$('#clear').onclick = () => { $('#query').value = ''; draw(); $('#query').focus(); };
+for (const button of document.querySelectorAll('[data-filter]')) button.onclick = () => {
+  filter = button.dataset.filter;
+  for (const option of document.querySelectorAll('[data-filter]')) option.setAttribute('aria-pressed', String(option === button));
+  draw();
+};
+$('#density').onclick = () => {
+  const compact = document.body.classList.toggle('compact');
+  $('#density').setAttribute('aria-pressed', String(compact));
+  $('#density').textContent = compact ? '标准视图' : '紧凑视图';
+};
+function finish(message) {
+  clearInterval(job.timer);
+  job = null;
+  $('#receipt').dataset.result = 'true';
+  $('#receipt').textContent = message;
+  $('progress').hidden = true;
+  const restoreFocus = document.activeElement === $('#cancel');
+  $('#cancel').hidden = true;
+  selection();
+  if (restoreFocus) ($('tbody tr.current input') || $('#query')).focus();
+}
+$('#start').onclick = () => {
+  if (job || !checked.size) return;
+  job = {items: [...checked], done: 0, differences: 0};
+  const bar = $('progress');
+  bar.max = job.items.length;
+  bar.value = 0;
+  bar.hidden = false;
+  $('#cancel').hidden = false;
+  selection();
+  $('#cancel').focus();
+  $('#receipt').textContent = '模拟校验中，共 ' + job.items.length + ' 项';
+  job.timer = setInterval(() => {
+    if (job.items[job.done].delta !== 0) job.differences++;
+    bar.value = ++job.done;
+    if (job.done === job.items.length) finish('已完成 ' + job.done + ' 项，有差异 ' + job.differences + ' 项');
+  }, 160);
+};
+$('#cancel').onclick = () => { if (job) finish('已取消，完成 ' + job.done + '/' + job.items.length + ' 项'); };
+document.addEventListener('keydown', event => {
+  if (event.isComposing || event.keyCode === 229) return;
+  if (event.key === 'Escape' && job) {
+    event.preventDefault();
+    $('#cancel').click();
+  } else if (event.key === 'Enter' && event.ctrlKey) {
+    event.preventDefault();
+    if (!event.repeat) $('#start').click();
+  } else if (event.key === 'Enter' && event.target === $('#query') && active) {
+    event.preventDefault();
+    $('tbody tr.current input').focus();
+  } else if (event.ctrlKey && event.key.toLowerCase() === 'f') {
+    event.preventDefault();
+    $('#query').focus();
+  }
+});
+const narrow = matchMedia('(max-width: 780px)');
+const resize = () => { $('details').open = !narrow.matches; };
+narrow.addEventListener('change', resize);
+resize();
+draw();
+</script></body></html>

@@ -1,0 +1,9 @@
+{"stack":"Qt","first_window_ms":551.4,"index":0,"unix_time":1793766562.9805949,"root_pid":32100,"measured":1,"skipped":[],"private_bytes":57610240,"working_set_sum_bytes":129085440}
+{"stack":"Qt","first_window_ms":563.5,"index":0,"unix_time":1793766565.850241,"root_pid":12220,"measured":1,"skipped":[],"private_bytes":58089472,"working_set_sum_bytes":129789952}
+{"stack":"Qt","first_window_ms":568.3,"index":0,"unix_time":1793766568.7048447,"root_pid":31676,"measured":1,"skipped":[],"private_bytes":58511360,"working_set_sum_bytes":130207744}
+{"stack":"WPF","first_window_ms":563.1,"index":0,"unix_time":1793767069.2143903,"root_pid":20840,"measured":1,"skipped":[],"private_bytes":75128832,"working_set_sum_bytes":117989376}
+{"stack":"WPF","first_window_ms":574.0,"index":0,"unix_time":1793767072.158167,"root_pid":51808,"measured":1,"skipped":[],"private_bytes":74219520,"working_set_sum_bytes":118972416}
+{"stack":"WPF","first_window_ms":528.9,"index":0,"unix_time":1793767074.9654071,"root_pid":34068,"measured":1,"skipped":[],"private_bytes":80470016,"working_set_sum_bytes":126230528}
+{"stack":"Electron","first_window_ms":173.9,"index":0,"unix_time":1793767077.4378936,"root_pid":41788,"measured":4,"skipped":[],"private_bytes":158535680,"working_set_sum_bytes":326660096}
+{"stack":"Electron","first_window_ms":162.3,"index":0,"unix_time":1793767079.942674,"root_pid":15212,"measured":4,"skipped":[],"private_bytes":157609984,"working_set_sum_bytes":325517312}
+{"stack":"Electron","first_window_ms":152.5,"index":0,"unix_time":1793767082.4583988,"root_pid":5740,"measured":4,"skipped":[],"private_bytes":152743936,"working_set_sum_bytes":319995904}

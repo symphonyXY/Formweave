@@ -1,0 +1,221 @@
+{
+  "date": "2026-11-14",
+  "method": "独立代理按原始请求执行，未提供观测判据；代理不读取 evals、验证记录或其他代理上下文。",
+  "snapshot_note": "前三个规划/来源/截图案例在环境说明迁移期间启动，仅环境信息位置发生变化，执行正文及参考未改。此处哈希标识本轮最终包，不将其冒充前三例逐字输入快照。",
+  "packages": {
+    "formweave-audit": "c01c6430474791b930d4c165c1e4b9193b47c12694583bdbd164c86d78e389fb",
+    "formweave-build": "5bc26f38ddbe57a969798a3801993e3acfc2a471f070ddde3cc978ef952c8164",
+    "formweave-plan": "8c7d6252f890f28ad8526d47b9ad0330c4101f09b7683e47a58787a3ba920e2b",
+    "formweave-preview": "c0bf33a57943690e13b447f06bcfffbea042281f767133863c827d3c56885218"
+  },
+  "approved_scope": {
+    "result": "passed",
+    "mode": "modified",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.13.17 (tags/v3.13.17:64e080d, Oct 21 2026, 14:08:53) [MSC v.1944 64 bit (AMD64)]",
+    "pyside6": "6.10.2",
+    "qt": "6.10.2",
+    "qt_platform": "windows",
+    "checks": [
+      {
+        "name": "正常窗口入口",
+        "result": "passed",
+        "details": "10,000 行演示数据；无选择时校验按钮禁用"
+      },
+      {
+        "name": "Ctrl+F",
+        "result": "passed",
+        "details": "从表格、校验按钮、筛选框触发均聚焦筛选；已有文本和结果保留"
+      },
+      {
+        "name": "Ctrl+L",
+        "result": "passed",
+        "details": "从表格、校验按钮、筛选框触发均聚焦筛选；已有文本和结果保留"
+      },
+      {
+        "name": "筛选与空结果恢复",
+        "result": "passed",
+        "details": "单条匹配、无匹配、清空后恢复 10,000 行通过"
+      },
+      {
+        "name": "批量校验",
+        "result": "passed",
+        "details": "原生按钮启动 3 条记录；SHA-256 前缀 c4755f85dfd7 与独立计算一致"
+      },
+      {
+        "name": "取消任务",
+        "result": "passed",
+        "details": "真实 Batch 线程已取消：完成 0/250000；单次按钮至回执 2746.71 ms"
+      },
+      {
+        "name": "渲染证据",
+        "result": "passed",
+        "details": "C:\\Users\\SymphonyX\\AppData\\Local\\Temp\\formweave-approved-qt-21osbwzj\\verification-results.png"
+      }
+    ]
+  },
+  "motion_preview": {
+    "runtime": "v24.22.1",
+    "scope": "Node VM + fake DOM + controlled scheduler; no real browser, no rendered UI, no native input",
+    "staticChecks": [
+      "JavaScript parse",
+      "unique HTML IDs",
+      "label target IDs",
+      "zh-CN lang",
+      "no external JS/CSS dependencies"
+    ],
+    "checks": [
+      {
+        "name": "初始 12 条合成记录；未提交任务",
+        "result": "PASS"
+      },
+      {
+        "name": "模拟执行进度来自执行器，不受时长控制",
+        "result": "PASS"
+      },
+      {
+        "name": "运行中重播不重提任务、不清空数量或输入",
+        "result": "PASS"
+      },
+      {
+        "name": "取消保留实际完成数，旧定时器不再更新",
+        "result": "PASS"
+      },
+      {
+        "name": "快速 A→B→C 只保留 C 的详情，动画替换旧实例",
+        "result": "PASS"
+      },
+      {
+        "name": "减少动效取消现有过渡，并保留终态和任务数据",
+        "result": "PASS"
+      },
+      {
+        "name": "0 ms 重播无动画，参数变更不提交业务",
+        "result": "PASS"
+      },
+      {
+        "name": "模拟第 4 条失败：只完成 3 条，保留查询和选中",
+        "result": "PASS"
+      },
+      {
+        "name": "重试正常完成：12 条、5 条差异；重播保留最终结果",
+        "result": "PASS"
+      },
+      {
+        "name": "无结果和清除筛选到达对应逻辑终态",
+        "result": "PASS"
+      },
+      {
+        "name": "未选中时禁用开始校验",
+        "result": "PASS"
+      },
+      {
+        "name": "即时取消新任务，完成数保持 0",
+        "result": "PASS"
+      },
+      {
+        "name": "恢复默认只重置预览参数",
+        "result": "PASS"
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "path": "%TEMP%/formweave-approved-qt-21osbwzj/workbench.py",
+      "sha256": "d7639cff2bdbbabb9301d63b2e2fe179399737bfa9e8a349671cac2f42198279"
+    },
+    {
+      "path": "%TEMP%/formweave-approved-qt-21osbwzj/verify_workbench.py",
+      "sha256": "0a6fc16cf5cbbfbb1c15464db966b99c2ca7dde567bb1c2bbc44f90119dc7a86"
+    },
+    {
+      "path": "%TEMP%/formweave-approved-qt-21osbwzj/verification-results.json",
+      "sha256": "f806d6c16dbd2693cfa492b141674f88830b182098b7b14a4dcf28136fbb8f01"
+    },
+    {
+      "path": "%TEMP%/formweave-approved-qt-21osbwzj/verification-results.png",
+      "sha256": "79e321bb0cec539ecb44c37d907eac240ca1cf538ecd1be34e19b32debc88c49"
+    },
+    {
+      "path": "%TEMP%/formweave-approved-qt-21osbwzj/VERIFICATION.md",
+      "sha256": "a28e45ecd54b96cddb43fd34ebe5b095ef72b0b691a0d686c5f6fedcf865312c"
+    },
+    {
+      "path": "%TEMP%/formweave-preview-206ab4ca2df04c45af3d2b314c5f63e7/index.html",
+      "sha256": "b5d0233ac00ebe0eb138f4e73807a45176d19169defeb10f32d7ec79eec0d8db"
+    },
+    {
+      "path": "%TEMP%/formweave-preview-206ab4ca2df04c45af3d2b314c5f63e7/verify.cjs",
+      "sha256": "0bd62f9b1943e8a575eedca088eb59660ef99ceeba52307f1e66396e5da5ba98"
+    },
+    {
+      "path": "%TEMP%/formweave-preview-206ab4ca2df04c45af3d2b314c5f63e7/preview-script.js",
+      "sha256": "ec99d1f9fd29c73a003d7c080d36069366ffe40cb802b17de901c2a14e7ad44e"
+    },
+    {
+      "path": "%TEMP%/formweave-preview-206ab4ca2df04c45af3d2b314c5f63e7/verification-results.json",
+      "sha256": "a79a045205ff2245ee30080c0f35108884c5df9f724ef3ce66d3f8ea59093b9b"
+    },
+    {
+      "path": "%TEMP%/formweave-preview-206ab4ca2df04c45af3d2b314c5f63e7/README.md",
+      "sha256": "70e5065c5bc7fb1dcb411d3915e4b0b61293ec3f478580fc262fad18825b9faf"
+    },
+    {
+      "path": "%TEMP%/mori-coffee-preview-e155a0ddf7/index.html",
+      "sha256": "08ba4c73ee41badd70f3f93266e70846ee6b333186290b948e15ceafb71d1bbe"
+    },
+    {
+      "path": "%TEMP%/mori-coffee-preview-e155a0ddf7/README.md",
+      "sha256": "1dc7790059ed93a30fb55556b8141a00ce32ea4642465d04dbb137afec209d37"
+    },
+    {
+      "path": "%TEMP%/mori-coffee-preview-e155a0ddf7/mobile-preview.jpg",
+      "sha256": "18e08d9cbea58cd1c91e73dd92e808cc71430a8d96e1217c2a51573112a4c782"
+    },
+    {
+      "path": "%TEMP%/mori-coffee-preview-e155a0ddf7/order-success.jpg",
+      "sha256": "6e222725d32c76007e778ff601ebaee08b6af5b6681b14580fdf9df56b5a1a77"
+    },
+    {
+      "path": "%TEMP%/mori-coffee-preview-e155a0ddf7/mori-coffee-preview.zip",
+      "sha256": "e68c2e4f90083d5b98fa1862b8f1331f865f33443d4c1fc93bcd6a1954318407"
+    }
+  ],
+  "behavior_results": {
+    "observables_passed": 8,
+    "partial": 1,
+    "protocol_deviation": [
+      "negative-web-prototype"
+    ],
+    "runtime_blocked": [
+      "motion-preview-replay"
+    ]
+  },
+  "qt_offscreen_probe": {
+    "rows": 80000,
+    "qt_platform": "offscreen",
+    "filter_ms": [
+      22.704500006511807,
+      22.65550009906292,
+      21.82440017350018,
+      22.559799952432513,
+      21.031999960541725
+    ],
+    "median_ms": 22.559799952432513,
+    "cancel": "已取消，完成 0/80000 项",
+    "probe_sha256": "61c082fa0792097df8bd54998cbbf7931d9dab4b7bb27963298fc667f4643181"
+  },
+  "routing_protocol_remediation": {
+    "case": "negative-web-prototype",
+    "agent": "eval_web_route",
+    "fixture": "%TEMP%/formweave-routing-fixture-layvyr5r/skills-catalog.json",
+    "fixture_sha256": "2dcbfa920c3b21dba481be7fea47ef1924502b7015be000ed78b5fc87e258f21",
+    "fixture_fields": [
+      "name",
+      "description"
+    ],
+    "result": "passed",
+    "scope": "仅复核路由，不重复计算完整案例数；保留首次读取协议偏差记录。"
+  },
+  "local_cli_version": "codex-cli 0.167.0-alpha.4.1"
+}

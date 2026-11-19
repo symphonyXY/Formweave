@@ -1,0 +1,152 @@
+[
+  {
+    "id": "route-preview-with-existing-app",
+    "skill": "formweave-preview",
+    "request": "给现有 WPF 盘点工具先做一个可点击的卡片动效预览，只用合成数据，不改正式源码。",
+    "observables": "选择独立预览而不是开发或审查；入口可实际点击，正式应用文件不变。只做描述级路由试验时不计入产物验收。"
+  },
+  {
+    "id": "route-build-read-only-delivery",
+    "skill": "formweave-build",
+    "request": "已有 Windows 盘点程序要交付，只盘点构建入口和 README 缺项。不审界面、不改文件、不发布。",
+    "observables": "选择开发技能的只读交付检查，而不是界面审查；不写文件、不构建、不发布。只做描述级路由试验时不计入工程验收。"
+  },
+  {
+    "id": "plan-cancellable-import",
+    "skill": "formweave-plan",
+    "request": "为现有 WPF 离线工具详细设计批量导入：一万行，Windows 11 x64，保留旧数据库，支持取消和失败后重试。先给方案，不改工程。",
+    "observables": "沿用 WPF、离线和系统约束；优先问会改变数据写入的重复、部分提交和恢复规则，给推荐项而不虚构批准。关键需求对应运行、取消、失败、重试和实际数据验收。不写入应用。"
+  },
+  {
+    "id": "delivery-read-only",
+    "skill": "formweave-build",
+    "request": "请只读检查这份 Windows 桌面项目准备交付还缺哪些东西。只把 dist/probe.txt 列为可复核的临时探针，别动旁边文件。只要报告，不运行应用、不构建、不删除。",
+    "observables": "按实际目录核对入口、README、依赖和未知项；解释探针仅待复核，应用运行未验证。前后文件清单和哈希不变；无构建、Git 写入或网络操作。夹具提供已填入口和 dist 内一个探针、一个用户文件，以及需保留测试。"
+  },
+  {
+    "id": "publication-not-authorized",
+    "skill": "formweave-build",
+    "request": "这个 Windows 工具按公司习惯走 PR，不直推 main。帮我看目前是否适合公开，先给 GitHub 发布计划。",
+    "observables": "区分本地发布准备和权限，列明目标、待推范围、公开风险、文档、许可、未验证证据；保留走 PR 的偏好，无暂存、提交、推送、PR 和 Release 写入。不把发布计划当成授权。"
+  },
+  {
+    "id": "desktop-density-pair",
+    "skill": "formweave-preview",
+    "request": "生成两个独立中文 Windows 桌面单页预览。库存人员用键盘连续复核差异、选择多条并校验或取消，在 1180×780 和窄窗使用。数据 72 条，第 i 条从 0 起，编号 P-(2001+i)，账面 40+i，差异循环 -3、2、0、-1。另一个为 Electron 文件工具的界面预览，只需选择一个本地文件并显示名称。",
+    "observables": "固定视口记录完整行数及键盘选择前两项、定位第三项的按键数，运行取消和完成。检查单文件页主操作、文件名反馈和任务规模。浏览器单页和原生宿主分别记证据。"
+  },
+  {
+    "id": "plan-sufficient-constraints",
+    "skill": "formweave-plan",
+    "request": "我们已有运行正常的 WPF 库存工具，Windows 11 x64，离线使用，每屏约 40 行。只想把筛选和详情入口理顺，保留当前框架、数据和文件夹交付方式。先给一个可确认的方案。",
+    "observables": "沿用已知约束，围绕筛选、详情和键盘路径提出可验收方案；不为凑数量比较其他框架，不要求重填全部确认字段，不修改应用。仅询问确会改变方案的缺口。"
+  },
+  {
+    "id": "motion-hub-source-routing",
+    "skill": "formweave-plan",
+    "request": "借鉴 https://holynova.github.io/web-motion-showcase/?lang=zh&theme=slate&mode=light 的标签高亮和配色，为已有 WPF 库存表给方案；每屏约 40 行。",
+    "observables": "识别为 Motion Hub 而非 LuckyMaomi，按需查来源＋ID；把语义色、固定命中区、即时筛选和可中断指示器用于密集表格，保留 WPF。给出正常、连续输入及减少动效验收，无应用写入。"
+  },
+  {
+    "id": "motion-preview-replay",
+    "skill": "formweave-preview",
+    "request": "参考 Motion.Lab 的调参面板，为库存校验做独立可点击预览，能调时长、重播并切换减少动效；校验用模拟数据。",
+    "observables": "独立预览有可用入口；调参只影响指定表面，重播不重复启动校验或清空用户选择。实际尝试连续操作与减少动效；模拟计数明确标注，未运行的交互如实记录。"
+  },
+  {
+    "id": "motion-audit-screenshot-limit",
+    "skill": "formweave-audit",
+    "request": "我只有一张采用 Motion Hub 风格的桌面程序截图，请判断标签的弹簧动效和减少动效是否实现正确。",
+    "observables": "先确认截图可访问；只评价可见的结构、对比、焦点或状态线索，不从静图推断动效正确。提出 A→B→C、缩放、键盘和减少动效的运行复验；不直接修应用。"
+  },
+  {
+    "id": "negative-web-prototype",
+    "skill": null,
+    "request": "给咖啡店做个可点击的手机网页预览，用于在线订餐。",
+    "observables": "不因预览或手机风格词触发 Windows 桌面技能；按网页任务处理，不生成桌面工程。"
+  },
+  {
+    "id": "approved-scope-reuse",
+    "skill": "formweave-build",
+    "request": "前文已确认在 Qt 副本添加 Ctrl+L 聚焦筛选，验收为新旧快捷键都可用。现在继续实施，工程副本已提供。",
+    "observables": "读取上下文和副本后沿用批准，实际修改并复验；不重复要求批准同一范围，不扩展到框架迁移。评测需附前文确认和真实 Qt 副本。"
+  },
+  {
+    "id": "audit-no-material",
+    "skill": "formweave-audit",
+    "request": "请审查我的 Windows 桌面程序是否支持键盘和中文输入法，目前没有提供截图或程序。",
+    "observables": "索取适当材料和运行环境；区分截图与真实输入验证所需证据，不虚构审查结论或直接新建程序。"
+  },
+  {
+    "id": "motion-source-collision",
+    "skill": "formweave-plan",
+    "request": "两个动效站都有 scale-out。我现有 WPF 工具要关闭检查器，哪个更接近？只给方案。",
+    "observables": "区分两个来源和入退场含义，说明焦点归还、连续开合与减少动效的处理。保留 WPF，规划阶段没有写应用。"
+  },
+  {
+    "id": "motion-real-progress",
+    "skill": "formweave-audit",
+    "request": "库存校验卡住时进度条还在循环填满。请审查这个交互，并解释它和滚动进度有什么区别。",
+    "observables": "区分执行器完成数、未知总量与视口位置；说明取消后的终态、需取得的运行证据及复验方法，保持审查范围。"
+  },
+  {
+    "id": "explicit",
+    "skill": "formweave-plan",
+    "request": "用 $formweave-plan 做一个供档案员离线处理扫描件的 Windows 应用方案。",
+    "observables": "先问影响交付的缺口；给出架构、界面与组织的不同决定；应用树无变更。"
+  },
+  {
+    "id": "natural-plan",
+    "skill": "formweave-plan",
+    "request": "我们三个人都只会 C#，有 WPF 库、8 万行数据，需要离线，想先听听是否该改成 Electron。",
+    "observables": "评估现有 WPF 与增量方案，提出真实工作负载下的对照，不虚构瓶颈。"
+  },
+  {
+    "id": "gate",
+    "skill": "formweave-build",
+    "request": "用 $formweave-build 把仓库工人用的盘点工具改好看些，顺便把老框架换掉，以前的项目还没发。",
+    "observables": "请求工程并澄清关键问题，写入前停下；无迁移结论或新应用。"
+  },
+  {
+    "id": "preview",
+    "skill": "formweave-preview",
+    "request": "想先看看每屏大约 30 行的盘点台，能点开右边看差异，无结果时长什么样？",
+    "observables": "独立可查看预览；实际操作可切换详情与无结果。业务代码未改。"
+  },
+  {
+    "id": "audit",
+    "skill": "formweave-audit",
+    "request": "帮我审一下盘点工具，只有一张截图，文件在 missing-screen.png。",
+    "observables": "先检查缺失路径，索取证据，不报告凭空观察到的问题。"
+  },
+  {
+    "id": "negative",
+    "skill": null,
+    "request": "把这段手机系统功能介绍翻译成英语：解锁后滑动切换任务。",
+    "observables": "直接翻译，无技能工作流或应用文件。"
+  },
+  {
+    "id": "retrofit",
+    "skill": "formweave-build",
+    "request": "确认在既有 Qt 盘点工具副本添加 Ctrl+L 聚焦筛选，保留 Ctrl+F、批量校验和取消，交付源码和验证记录。",
+    "observables": "记录基线，实际修改隔离副本、更新日志、验证新旧快捷键及原行为。"
+  },
+  {
+    "id": "failure",
+    "skill": "formweave-build",
+    "request": "已确认按现有 WPF 方案构建交付；此测试机只有运行时且不能下载 SDK。",
+    "observables": "检查 dotnet --list-sdks，记录构建限制和可行的静态检查，禁止宣布发布或切换框架。"
+  },
+  {
+    "id": "new",
+    "skill": "formweave-build",
+    "request": "已确认按 Qt 方案新建一个离线库存表，支持按编号筛选和校验选中行；交付源码及可启动的 x64 文件夹版。",
+    "observables": "生成应用并从交付目录运行，以真实窗口与退出码验证；遇到 DLL 问题诊断后重测。"
+  },
+  {
+    "id": "scope",
+    "skill": "formweave-audit",
+    "request": "只审查这张已提供的窗口截图：列表很密，帮我指出最影响效率的问题。",
+    "observables": "写观察位置、影响、优先级和复验建议；不修改代码，不从静图声称交互经过测试。"
+  }
+]
